@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import { store } from '../../../shared';
-import { login } from '../../../shared/slice/Auth/AuthService';
+import { login, updateLastActivity } from '../../../shared/slice/Auth/AuthService';
 import {
   setToken,
   setLoggedInUser,
@@ -35,7 +35,8 @@ const SigninScreen = ({ navigation }) => {
       if (response?.data?.signinToken) {
         store.dispatch(setToken({ token: response.data.signinToken }));
         store.dispatch(setLoggedInUser({ user: response.data.user }));
-        console.log(response.msg);
+        navigation.navigate('Main');
+        await updateLastActivity({email:email})
       } else {
         setError('Identifiants invalides.');
       }

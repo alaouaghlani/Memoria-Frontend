@@ -7,22 +7,7 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-
-// 👉 Replace with actual API calls
-const sendResetCode = async (email) => {
-  console.log('Sending reset code to:', email);
-  // await axios.post('/auth/forgot-password', { email });
-};
-
-const verifyCode = async (email, code) => {
-  console.log('Verifying code:', code, 'for email:', email);
-  // await axios.post('/auth/verify-code', { email, code });
-};
-
-const resetPassword = async (email, newPassword) => {
-  console.log('Resetting password for:', email);
-  // await axios.post('/auth/reset-password', { email, newPassword });
-};
+import { forgetPassword, updatePassword, verifyCode } from '../../../shared/slice/Auth/AuthService';
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [step, setStep] = useState(1);
@@ -39,10 +24,15 @@ const ForgotPasswordScreen = ({ navigation }) => {
     }
     setLoading(true);
     try {
-      await sendResetCode(email);
-      setStep(2);
+      const response = await forgetPassword({ email: email });
+      if (response.success) {
+        setStep(2);
+      } else {
+        Alert.alert(response.msg);
+      }
     } catch (error) {
-      Alert.alert('Erreur', 'Échec de l’envoi de l’email.');
+      Alert.alert('Erreur',"This email doesn't exist.");
+      
     } finally {
       setLoading(false);
     }
@@ -54,10 +44,20 @@ const ForgotPasswordScreen = ({ navigation }) => {
       return;
     }
     setLoading(true);
+    const data = {
+      email: email,
+      code: code,
+    };
     try {
-      await verifyCode(email, code);
-      setStep(3);
+      const response = await verifyCode(data);
+      if (response.success) {
+        setStep(3);
+      } else {
+        Alert.alert(response.msg);
+      }
     } catch (error) {
+      console.log(error);
+      
       Alert.alert('Erreur', 'Code invalide.');
     } finally {
       setLoading(false);
@@ -74,8 +74,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
       return;
     }
     setLoading(true);
+    const data = {
+      email: email,
+      password: password,
+    };
     try {
-      await resetPassword(email, password);
+      const reponse = await updatePassword(data);
+
       Alert.alert('Succès', 'Mot de passe réinitialisé.');
       navigation.navigate('Login');
     } catch (error) {
@@ -98,8 +103,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
             value={email}
             onChangeText={setEmail}
           />
-          <TouchableOpacity style={styles.button} onPress={handleSendEmail} disabled={loading}>
-            <Text style={styles.buttonText}>{loading ? 'Envoi...' : 'Envoyer le code'}</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleSendEmail}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? 'Envoi...' : 'Envoyer le code'}
+            </Text>
           </TouchableOpacity>
         </>
       )}
@@ -114,8 +125,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
             value={code}
             onChangeText={setCode}
           />
-          <TouchableOpacity style={styles.button} onPress={handleVerifyCode} disabled={loading}>
-            <Text style={styles.buttonText}>{loading ? 'Vérification...' : 'Vérifier le code'}</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleVerifyCode}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? 'Vérification...' : 'Vérifier le code'}
+            </Text>
           </TouchableOpacity>
         </>
       )}
@@ -136,8 +153,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
             value={confirmPassword}
             onChangeText={setConfirmPassword}
           />
-          <TouchableOpacity style={styles.button} onPress={handleResetPassword} disabled={loading}>
-            <Text style={styles.buttonText}>{loading ? 'Changement...' : 'Changer le mot de passe'}</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleResetPassword}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? 'Changement...' : 'Changer le mot de passe'}
+            </Text>
           </TouchableOpacity>
         </>
       )}
