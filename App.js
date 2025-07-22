@@ -12,6 +12,7 @@ import SignupScreen from './src/screens/Authentificaion/Signup';
 import ForgotPasswordScreen from './src/screens/Authentificaion/ForgetPassword';
 import MainScreen from './src/screens/Main';
 import { persistor, store } from './src/shared';
+import RelateScreen from './src/screens/RelateScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,7 @@ const RootNavigation = () => {
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         <Stack.Screen name="Main" component={MainScreen} />
+        <Stack.Screen name="Relate" component={RelateScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

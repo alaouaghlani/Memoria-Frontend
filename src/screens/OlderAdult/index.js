@@ -19,6 +19,9 @@ const OlderAdultScreen = ({ navigation, handleLogout, user }) => (
         🚪 Se déconnecter
       </Text>
     </TouchableOpacity>
+    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Relate')}>
+  <Text style={styles.cardTitle}>➕ Relier à un proche âgé</Text>
+</TouchableOpacity>
   </ScrollView>
 );
 const styles = StyleSheet.create({
