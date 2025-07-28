@@ -1,7 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 const HomeScreen = ({ navigation }) => {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
       {/* Logo */}
@@ -12,19 +15,19 @@ const HomeScreen = ({ navigation }) => {
       />
 
       {/* App Title */}
-      <Text style={styles.title}>Memoria</Text>
+      <Text style={styles.title}>{t('home.appName')}</Text>
 
       {/* Slogan */}
-      <Text style={styles.slogan}>IA au service du souvenir.</Text>
+      <Text style={styles.slogan}>{t('home.slogan')}</Text>
 
       {/* Action Buttons */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.buttonPrimary} onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.buttonText}>Se connecter</Text>
+          <Text style={styles.buttonText}>{t('home.login')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.buttonSecondary} onPress={() => navigation.navigate('Signup')}>
-          <Text style={styles.buttonSecondaryText}>Créer un compte</Text>
+          <Text style={styles.buttonSecondaryText}>{t('home.signup')}</Text>
         </TouchableOpacity>
       </View>
     </View>

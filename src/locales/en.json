@@ -1,0 +1,191 @@
+{
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "emailPlaceholder": "Enter your email",
+    "enterEmail": "Please enter your email.",
+    "emailNotExist": "This email doesn't exist.",
+    "sendCode": "Send Code",
+    "sending": "Sending...",
+    "codeSent": "A code has been sent to your email.",
+    "codePlaceholder": "Verification code",
+    "enterCode": "Please enter the verification code.",
+    "invalidCode": "Invalid verification code.",
+    "verifyCode": "Verify Code",
+    "verifying": "Verifying...",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "changePassword": "Change Password",
+    "changing": "Changing...",
+    "passwordMismatch": "Passwords do not match.",
+    "fillBothFields": "Please fill in both password fields.",
+    "passwordReset": "Password changed successfully.",
+    "resetFailed": "Password reset failed.",
+    "restart": "Start over"
+  },
+  "toast": {
+    "error": "Error",
+    "success": "Success",
+    "unknownError": "An unknown error occurred."
+  },
+  
+  "home": {
+    "appName": "Memoria",
+    "slogan": "AI in the service of memory.",
+    "login": "Login",
+    "signup": "Create an account"
+  },
+  "signin": {
+    "title": "Login",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "forgotPassword": "Forgot password?",
+    "login": "Login",
+    "loggingIn": "Logging in...",
+    "noAccount": "Don't have an account? Create one",
+    "fillAllFields": "Please fill in all fields.",
+    "invalidCredentials": "Invalid credentials."
+  },  "signup": {
+    "title": "Create an Account",
+    "fullName": "Full Name",
+    "email": "Email",
+    "password": "Password",
+    "dob": "Date of Birth (YYYY-MM-DD)",
+    "gender": "Gender (Male / Female)",
+    "accountType": "Account Type",
+    "close": "Close",
+    "older": "Older Adult",
+    "create": "Create Account",
+    "creating": "Creating...",
+    "haveAccount": "Already have an account? Sign in",
+    "fillAllFields": "Please fill in all fields.",
+    "creationFailed": "Account creation failed."
+  },
+  "error": "Error",
+  "older": {
+    "welcome": "Welcome",
+    "relate": "Connect to a close one",
+    "closeList": "List of close relatives",
+    "logout": "Log out"
+  },
+    "relateScreen": {
+    "title": "Connect to a close one",
+    "emailPlaceholder": "Close one’s email",
+    "relationPlaceholder": "Relation (e.g., daughter, friend...)",
+    "relateButton": "Connect",
+    "fillAllFields": "Please fill in all fields.",
+    "linkSuccess": "Link created successfully.",
+    "linkError": "Failed to create the link."
+  },
+   "closeList": {
+    "title": "Close List",
+    "noData": "No close contacts found.",
+    "relation": "Relation",
+    "status": {
+      "accepted": "Accepted",
+      "pending": "Pending",
+      "denied": "Denied"
+    },
+    "resend": "🔄 Resend request",
+    "resendSuccess": "Request resent successfully.",
+    "resendError": "Unable to resend the request."
+  },
+   "closeScreen": {
+    "welcome": "Welcome,",
+    "viewRequests": "View older adults' requests",
+    "logout": "Logout",
+    "settings": "Settings",
+    "profile": "Profile"
+  },
+  "olderRequest": {
+  "title": "Requests from older adults",
+  "fetchErrorTitle": "Failed to load",
+  "fetchErrorMessage": "Please try again later.",
+  "relation": "Relation",
+  "sentAt": "Sent at",
+  "updatedAt": "Updated at",
+  "noRequests": "No requests at the moment.",
+  "accept": "Accept",
+  "decline": "Decline",
+  "enterCodeTitle": "Enter verification code",
+  "codePlaceholder": "Code",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "missingCodeTitle": "Missing code",
+  "missingCodeMessage": "Please enter the code.",
+  "serverErrorTitle": "Server error",
+  "serverErrorMessage": "Please try again.",
+  "successTitle": "Success",
+  "acceptSuccess": "Request accepted successfully.",
+  "declineSuccess": "Request declined successfully.",
+  "wrongCodeTitle": "Incorrect code",
+  "wrongCodeMessage": "Try again."
+},
+  "screen": {
+    "title": "Requests from Older Adults",
+    "noRequests": "No requests at the moment."
+  },
+  "request": {
+    "relation": "Relation",
+    "sentAt": "Sent at",
+    "updatedAt": "Updated at"
+  },
+  "status": {
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "denied": "Denied"
+  },
+  "actions": {
+    "accept": "Accept",
+    "decline": "Decline"
+  },
+  "modal": {
+    "title": "Enter the verification code",
+    "placeholder": "Code",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "errors": {
+    "loadingFailed": "Failed to load",
+    "tryAgainLater": "Please try again later",
+      "incorrectCode": "Incorrect code",
+    "serverError": "Server error",
+    "tryAgain": "Please try again"
+  },
+  "validation": {
+    "missingCode": "Missing code",
+    "enterCode": "Please enter the code"
+  },
+  "success": {
+    "title": "Success",
+    "accepted": "Request accepted successfully.",
+    "denied": "Request denied successfully."
+  },
+   "settings": {
+  "title": "Consent Settings",
+  "relation": "Relation",
+  "success": "Updated successfully",
+  "error": "An error occurred",
+  "noData": "No older adults linked",
+ "authorizationForTransmission": "Authorization for Transmission"
+  },
+"profile": {
+  "title": "Edit Profile",
+  "fullName": "Full Name",
+  "email": "Email",
+  "dateOfBirth": "Date of Birth",
+  "selectDate": "Select Date",
+  "gender": "Gender",
+  "selectGender": "Select Gender",
+  "male": "Male",
+  "female": "Female",
+  "userStatus": "Status",
+  "selectStatus": "Select Status",
+  "active": "Active",
+  "suspended": "Suspended",
+  "authorization": "Authorization for Transmission",
+  "save": "Save",
+  "success": "Profile updated successfully!",
+  "error": "Error",
+  "fillAllFields": "Please fill in all the required fields."
+}
+}

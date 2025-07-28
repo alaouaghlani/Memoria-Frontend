@@ -1,61 +1,108 @@
 import React from 'react';
-import { ScrollView, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import {
+  ScrollView,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { useTranslation } from 'react-i18next';
 
-const CloseScreen = ({ navigation, handleLogout, user }) => (
-  <ScrollView contentContainerStyle={styles.container}>
-    <Text style={styles.subtext}>Bienvenue, {user.fullName}</Text>
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => navigation.navigate('Messages')}
-    >
-      <Text style={styles.cardTitle}>💬 Messages</Text>
-    </TouchableOpacity>
-    {/* Add other Close-specific buttons here */}
-    <TouchableOpacity
-      style={[styles.card, styles.logoutCard]}
-      onPress={handleLogout}
-    >
-      <Text style={[styles.cardTitle, { color: '#dc2626' }]}>
-        🚪 Se déconnecter
-      </Text>
-    </TouchableOpacity>
-  </ScrollView>
-);
+const CloseScreen = ({ navigation, handleLogout, user }) => {
+  const { t } = useTranslation();
+
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.welcome}>👋 {t('closeScreen.welcome')}</Text>
+      <Text style={styles.username}>{user.fullName}</Text>
+
+      <View style={styles.menuContainer}>
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => navigation.navigate('OlderRequests')}
+        >
+          <Text style={styles.cardTitle}>
+            📥 {t('closeScreen.viewRequests')}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => navigation.navigate('Settings')}
+        >
+          <Text style={styles.cardTitle}>⚙️ {t('closeScreen.settings')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => navigation.navigate('ProfileClose')}
+        >
+          <Text style={styles.cardTitle}>👤 {t('closeScreen.profile')}</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity
+        style={[styles.card, styles.logoutCard]}
+        onPress={handleLogout}
+      >
+        <Text style={styles.logoutText}>🚪 {t('closeScreen.logout')}</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
-    backgroundColor: '#f0f4ff',
     flexGrow: 1,
+    backgroundColor: '#f0f4ff',
+    padding: 24,
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
-  subtext: {
-    fontSize: 16,
-    color: '#6366f1',
-    marginBottom: 20,
+  welcome: {
+    fontSize: 18,
+    color: '#4f46e5',
+    marginBottom: 4,
     textAlign: 'center',
-    fontStyle: 'italic',
+  },
+  username: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#1f2937',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  menuContainer: {
+    width: '100%',
+    gap: 12,
   },
   card: {
-    backgroundColor: '#fff',
-    paddingVertical: 20,
-    paddingHorizontal: 24,
-    borderRadius: 14,
-    marginBottom: 16,
+    backgroundColor: '#ffffff',
+    paddingVertical: 18,
+    paddingHorizontal: 20,
+    borderRadius: 12,
     shadowColor: '#000',
     shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 3 },
-    shadowRadius: 6,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2,
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
-    color: '#1f2937',
+    color: '#111827',
   },
   logoutCard: {
     backgroundColor: '#fff0f0',
     borderColor: '#dc2626',
     borderWidth: 1,
+    marginTop: 40,
+    width: '100%',
+  },
+  logoutText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#dc2626',
+    textAlign: 'center',
   },
 });
 

@@ -5,43 +5,50 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
 } from 'react-native';
 import { useSelector } from 'react-redux';
+import Toast from 'react-native-toast-message';
 import { designateHeirs } from '../../shared/slice/OlderAdult/OlderAdultService';
+import { useTranslation } from 'react-i18next';
 
 const RelateScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [relation, setRelation] = useState('');
   const currentUser = useSelector(state => state.authentification.loggedInUser);
 
+  const showToast = (type, text1, text2) => {
+    Toast.show({ type, text1, text2 });
+  };
+
   const handleRelate = async () => {
     if (!email || !relation) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
+      showToast('error', t('common.error'), t('relateScreen.fillAllFields'));
       return;
     }
-    const data = [{ email: email, relation: relation }];
+
+    const data = [{ email, relation }];
     try {
-      const response = await designateHeirs(data,currentUser._id);
+      const response = await designateHeirs(data, currentUser._id);
 
       if (response.success) {
-        Alert.alert('Succès', 'Lien créé avec succès.');
+        showToast('success', t('common.success'), t('relateScreen.linkSuccess'));
         navigation.goBack();
       } else {
-        Alert.alert('Erreur', response.message || 'Une erreur est survenue.');
+        showToast('error', t('common.error'), response.message || t('common.genericError'));
       }
     } catch (error) {
-      Alert.alert('Erreur', 'Impossible de créer le lien.');
+      showToast('error', t('common.error'), t('relateScreen.linkError'));
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Relier à un proche </Text>
+      <Text style={styles.title}>{t('relateScreen.title')}</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Email du proche"
+        placeholder={t('relateScreen.emailPlaceholder')}
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -50,13 +57,13 @@ const RelateScreen = ({ navigation }) => {
 
       <TextInput
         style={styles.input}
-        placeholder="Relation (ex: fille, ami...)"
+        placeholder={t('relateScreen.relationPlaceholder')}
         value={relation}
         onChangeText={setRelation}
       />
 
       <TouchableOpacity style={styles.button} onPress={handleRelate}>
-        <Text style={styles.buttonText}>Relier</Text>
+        <Text style={styles.buttonText}>{t('relateScreen.relateButton')}</Text>
       </TouchableOpacity>
     </View>
   );

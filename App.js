@@ -12,8 +12,13 @@ import SignupScreen from './src/screens/Authentificaion/Signup';
 import ForgotPasswordScreen from './src/screens/Authentificaion/ForgetPassword';
 import MainScreen from './src/screens/Main';
 import { persistor, store } from './src/shared';
-import RelateScreen from './src/screens/RelateScreen';
-
+import CloseListScreen from './src/screens/OlderAdult/closeListScreen';
+import OlderRequestScreen from './src/screens/CloseAdult/OlderRequestScreen';
+import RelateScreen from './src/screens/OlderAdult/RelateScreen';
+import SettingsScreen from './src/screens/CloseAdult/SettingsScreen';
+import ProfileCloseScreen from './src/screens/CloseAdult/ProfileScreen';
+import ProfileOlderScreen from './src/screens/OlderAdult/ProfileScreen';
+import SettingsOlderScreen from './src/screens/OlderAdult/SettingsScreen';
 const Stack = createNativeStackNavigator();
 
 // ✅ Wrapper to access Redux inside Navigator setup
@@ -30,6 +35,13 @@ const RootNavigation = () => {
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         <Stack.Screen name="Main" component={MainScreen} />
         <Stack.Screen name="Relate" component={RelateScreen} />
+        <Stack.Screen name="CloseList" component={CloseListScreen} />
+        <Stack.Screen name="OlderRequests" component={OlderRequestScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="SettingsOlder" component={SettingsOlderScreen} />
+        <Stack.Screen name="ProfileClose" component={ProfileCloseScreen} />
+        <Stack.Screen name="ProfileOlder" component={ProfileOlderScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

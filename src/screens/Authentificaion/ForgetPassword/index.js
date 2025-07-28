@@ -5,11 +5,18 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
 } from 'react-native';
-import { forgetPassword, updatePassword, verifyCode } from '../../../shared/slice/Auth/AuthService';
+import Toast from 'react-native-toast-message';
+import {
+  forgetPassword,
+  updatePassword,
+  verifyCode,
+} from '../../../shared/slice/Auth/AuthService';
+import { useTranslation } from 'react-i18next';
 
 const ForgotPasswordScreen = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
@@ -17,22 +24,29 @@ const ForgotPasswordScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const showToast = (type, text1, text2) => {
+    Toast.show({
+      type,
+      text1,
+      text2,
+    });
+  };
+
   const handleSendEmail = async () => {
     if (!email) {
-      Alert.alert('Erreur', 'Veuillez entrer votre email.');
+      showToast('error', t('toast.error'), t('forgotPassword.enterEmail'));
       return;
     }
     setLoading(true);
     try {
-      const response = await forgetPassword({ email: email });
+      const response = await forgetPassword({ email });
       if (response.success) {
         setStep(2);
       } else {
-        Alert.alert(response.msg);
+        showToast('error', t('toast.error'), response.msg || t('toast.unknownError'));
       }
     } catch (error) {
-      Alert.alert('Erreur',"This email doesn't exist.");
-      
+      showToast('error', t('toast.error'), t('forgotPassword.emailNotExist'));
     } finally {
       setLoading(false);
     }
@@ -40,25 +54,19 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
   const handleVerifyCode = async () => {
     if (!code) {
-      Alert.alert('Erreur', 'Veuillez entrer le code de vérification.');
+      showToast('error', t('toast.error'), t('forgotPassword.enterCode'));
       return;
     }
     setLoading(true);
-    const data = {
-      email: email,
-      code: code,
-    };
     try {
-      const response = await verifyCode(data);
+      const response = await verifyCode({ email, code });
       if (response.success) {
         setStep(3);
       } else {
-        Alert.alert(response.msg);
+        showToast('error', t('toast.error'), response.msg || t('forgotPassword.invalidCode'));
       }
     } catch (error) {
-      console.log(error);
-      
-      Alert.alert('Erreur', 'Code invalide.');
+      showToast('error', t('toast.error'), t('forgotPassword.invalidCode'));
     } finally {
       setLoading(false);
     }
@@ -66,25 +74,20 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
   const handleResetPassword = async () => {
     if (!password || !confirmPassword) {
-      Alert.alert('Erreur', 'Veuillez remplir les deux champs.');
+      showToast('error', t('toast.error'), t('forgotPassword.fillBothFields'));
       return;
     }
     if (password !== confirmPassword) {
-      Alert.alert('Erreur', 'Les mots de passe ne correspondent pas.');
+      showToast('error', t('toast.error'), t('forgotPassword.passwordMismatch'));
       return;
     }
     setLoading(true);
-    const data = {
-      email: email,
-      password: password,
-    };
     try {
-      const reponse = await updatePassword(data);
-
-      Alert.alert('Succès', 'Mot de passe réinitialisé.');
+      const response = await updatePassword({ email, password });
+      showToast('success', t('toast.success'), t('forgotPassword.passwordReset'));
       navigation.navigate('Login');
     } catch (error) {
-      Alert.alert('Erreur', 'Échec de la réinitialisation.');
+      showToast('error', t('toast.error'), t('forgotPassword.resetFailed'));
     } finally {
       setLoading(false);
     }
@@ -92,13 +95,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Mot de passe oublié</Text>
+      <Text style={styles.title}>{t('forgotPassword.title')}</Text>
 
       {step === 1 && (
         <>
           <TextInput
             style={styles.input}
-            placeholder="Votre email"
+            placeholder={t('forgotPassword.emailPlaceholder')}
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}
@@ -109,7 +112,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
             disabled={loading}
           >
             <Text style={styles.buttonText}>
-              {loading ? 'Envoi...' : 'Envoyer le code'}
+              {loading ? t('forgotPassword.sending') : t('forgotPassword.sendCode')}
             </Text>
           </TouchableOpacity>
         </>
@@ -117,10 +120,10 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
       {step === 2 && (
         <>
-          <Text style={styles.label}>Un code vous a été envoyé par email.</Text>
+          <Text style={styles.label}>{t('forgotPassword.codeSent')}</Text>
           <TextInput
             style={styles.input}
-            placeholder="Code de vérification"
+            placeholder={t('forgotPassword.codePlaceholder')}
             keyboardType="numeric"
             value={code}
             onChangeText={setCode}
@@ -131,7 +134,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
             disabled={loading}
           >
             <Text style={styles.buttonText}>
-              {loading ? 'Vérification...' : 'Vérifier le code'}
+              {loading ? t('forgotPassword.verifying') : t('forgotPassword.verifyCode')}
             </Text>
           </TouchableOpacity>
         </>
@@ -141,14 +144,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
         <>
           <TextInput
             style={styles.input}
-            placeholder="Nouveau mot de passe"
+            placeholder={t('forgotPassword.newPassword')}
             secureTextEntry
             value={password}
             onChangeText={setPassword}
           />
           <TextInput
             style={styles.input}
-            placeholder="Confirmer le mot de passe"
+            placeholder={t('forgotPassword.confirmPassword')}
             secureTextEntry
             value={confirmPassword}
             onChangeText={setConfirmPassword}
@@ -159,7 +162,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
             disabled={loading}
           >
             <Text style={styles.buttonText}>
-              {loading ? 'Changement...' : 'Changer le mot de passe'}
+              {loading ? t('forgotPassword.changing') : t('forgotPassword.changePassword')}
             </Text>
           </TouchableOpacity>
         </>
@@ -167,7 +170,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
       {step > 1 && (
         <TouchableOpacity onPress={() => setStep(1)}>
-          <Text style={styles.link}>Recommencer</Text>
+          <Text style={styles.link}>{t('forgotPassword.restart')}</Text>
         </TouchableOpacity>
       )}
     </View>

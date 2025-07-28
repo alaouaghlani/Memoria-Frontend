@@ -1,20 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export const OlderAdultInitialState = {
-  loggedInUser: undefined,
-  isLoggedIn: false,
-  userId: undefined,
-  token: undefined,
+  closeList: [],
 };
 
 export const olderAdultSlice = createSlice({
   name: 'olderAdult',
   initialState: OlderAdultInitialState,
   reducers: {
- 
-
+    setCloseList: (state, action) => {
+      state.closeList = action.payload.closeList;
+    },
   },
 });
 
-export const {} =
-  olderAdultSlice.actions;
+export const { setCloseList } = olderAdultSlice.actions;

@@ -1,21 +1,21 @@
 import { BaseURI } from '../..';
 import { Executor } from '../../Executor';
 
-export const designateHeirs = (data, id) => {
+export const getOlderAdultRequest = id => {
   return Executor({
-    method: 'post',
-    data,
-    url: BaseURI + `/memoria/designateHeirs/${id}`,
+    method: 'get',
+    url: BaseURI + `/memoria/getoldersfromidclose/${id}`,
     isSilent: false,
     successFun: data => {},
     withErrorToast: false,
     withSuccessToast: false,
   });
 };
-export const getCloseAdult = id => {
+export const updateOlderRequest = (data) => {
   return Executor({
-    method: 'get',
-    url: BaseURI + `/memoria/getclosesbyidolderadult/${id}`,
+    method: 'post',
+    data,
+    url: BaseURI + `/memoria/updateheir`,
     isSilent: false,
     successFun: data => {},
     withErrorToast: false,
@@ -23,22 +23,23 @@ export const getCloseAdult = id => {
   });
 };
 
-export const updateAuthorizationForTransmission = (data) => {
+export const updateConsent = (data) => {
   return Executor({
     method: 'put',
     data,
-    url: BaseURI + `/memoria/updateauthorizationfortransmission`,
+    url: BaseURI + `/memoria/updateconsent`,
     isSilent: false,
     successFun: data => {},
     withErrorToast: false,
     withSuccessToast: false,
   });
 };
-export const updateOlderProfile = (data) => {
+
+export const updateCloseProfile = (data) => {
   return Executor({
     method: 'put',
     data,
-    url: BaseURI + `/memoria/updateolderprofile`,
+    url: BaseURI + `/memoria/updatecloseprofile`,
     isSilent: false,
     successFun: data => {},
     withErrorToast: false,

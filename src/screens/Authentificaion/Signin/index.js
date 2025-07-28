@@ -4,9 +4,9 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  Alert,
+  StyleSheet
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { store } from '../../../shared';
 import { login, updateLastActivity } from '../../../shared/slice/Auth/AuthService';
 import {
@@ -15,15 +15,16 @@ import {
 } from '../../../shared/slice/Auth/AuthSlice';
 
 const SigninScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null); // ✅ added
+  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
     try {
       if (!email || !password) {
-        setError('Veuillez remplir tous les champs.');
+        setError(t('signin.fillAllFields'));
         return;
       }
 
@@ -36,13 +37,13 @@ const SigninScreen = ({ navigation }) => {
         store.dispatch(setToken({ token: response.data.signinToken }));
         store.dispatch(setLoggedInUser({ user: response.data.user }));
         navigation.navigate('Main');
-        await updateLastActivity({email:email})
+        await updateLastActivity({ email });
       } else {
-        setError('Identifiants invalides.');
+        setError(t('signin.invalidCredentials'));
       }
     } catch (error) {
       console.error('Error during login:', error);
-      setError('error', error);
+      setError(t('signin.invalidCredentials'));
     } finally {
       setIsLoading(false);
     }
@@ -50,13 +51,13 @@ const SigninScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Connexion</Text>
+      <Text style={styles.title}>{t('signin.title')}</Text>
 
       {error && <Text style={styles.errorText}>{error}</Text>}
 
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder={t('signin.emailPlaceholder')}
         keyboardType="email-address"
         value={email}
         onChangeText={setEmail}
@@ -64,13 +65,14 @@ const SigninScreen = ({ navigation }) => {
 
       <TextInput
         style={styles.input}
-        placeholder="Mot de passe"
+        placeholder={t('signin.passwordPlaceholder')}
         secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
+
       <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-        <Text style={styles.link}>Mot de passe oublié ?</Text>
+        <Text style={styles.link}>{t('signin.forgotPassword')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -79,12 +81,12 @@ const SigninScreen = ({ navigation }) => {
         disabled={isLoading}
       >
         <Text style={styles.buttonText}>
-          {isLoading ? 'Connexion...' : 'Se connecter'}
+          {isLoading ? t('signin.loggingIn') : t('signin.login')}
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-        <Text style={styles.link}>Pas encore de compte ? Créer un compte</Text>
+        <Text style={styles.link}>{t('signin.noAccount')}</Text>
       </TouchableOpacity>
     </View>
   );

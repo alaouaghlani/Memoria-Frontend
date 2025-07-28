@@ -5,12 +5,14 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   ScrollView,
 } from 'react-native';
-import { signup } from '../../../shared/slice/Auth/AuthService'; // ✅ your API function
+import Toast from 'react-native-toast-message';
+import { signup } from '../../../shared/slice/Auth/AuthService';
+import { useTranslation } from 'react-i18next';
 
 const SignupScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -22,6 +24,10 @@ const SignupScreen = ({ navigation }) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const showToast = (type, text1, text2) => {
+    Toast.show({ type, text1, text2 });
+  };
+
   const handleChange = (key, value) => {
     setForm({ ...form, [key]: value });
   };
@@ -30,7 +36,7 @@ const SignupScreen = ({ navigation }) => {
     const { fullName, email, password, gender, dateOfBirth, type } = form;
 
     if (!fullName || !email || !password || !gender || !dateOfBirth || !type) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
+      showToast('error', t('error'), t('signup.fillAllFields'));
       return;
     }
 
@@ -45,13 +51,11 @@ const SignupScreen = ({ navigation }) => {
 
     try {
       setIsLoading(true);
-      const response = await signup(payload); // ✅ call your API
-      console.log(response);
-
+      const response = await signup(payload);
       navigation.navigate('Login');
     } catch (err) {
       console.error('Signup error:', err);
-      Alert.alert('Erreur', 'La création du compte a échoué.');
+      showToast('error', t('error'), t('signup.creationFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -59,18 +63,18 @@ const SignupScreen = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Créer un compte</Text>
+      <Text style={styles.title}>{t('signup.title')}</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="Nom complet"
+        placeholder={t('signup.fullName')}
         value={form.fullName}
         onChangeText={text => handleChange('fullName', text)}
       />
 
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder={t('signup.email')}
         keyboardType="email-address"
         value={form.email}
         onChangeText={text => handleChange('email', text)}
@@ -78,7 +82,7 @@ const SignupScreen = ({ navigation }) => {
 
       <TextInput
         style={styles.input}
-        placeholder="Mot de passe"
+        placeholder={t('signup.password')}
         secureTextEntry
         value={form.password}
         onChangeText={text => handleChange('password', text)}
@@ -86,19 +90,19 @@ const SignupScreen = ({ navigation }) => {
 
       <TextInput
         style={styles.input}
-        placeholder="Date de naissance (YYYY-MM-DD)"
+        placeholder={t('signup.dob')}
         value={form.dateOfBirth}
         onChangeText={text => handleChange('dateOfBirth', text)}
       />
 
       <TextInput
         style={styles.input}
-        placeholder="Genre (Homme / Femme)"
+        placeholder={t('signup.gender')}
         value={form.gender}
         onChangeText={text => handleChange('gender', text)}
       />
 
-      <Text style={styles.label}>Type de compte</Text>
+      <Text style={styles.label}>{t('signup.accountType')}</Text>
       <View style={styles.typeContainer}>
         <TouchableOpacity
           style={[
@@ -113,7 +117,7 @@ const SignupScreen = ({ navigation }) => {
               form.type === 'Close' && styles.typeButtonTextSelected,
             ]}
           >
-            Proche
+            {t('signup.close')}
           </Text>
         </TouchableOpacity>
 
@@ -130,7 +134,7 @@ const SignupScreen = ({ navigation }) => {
               form.type === 'OlderAdult' && styles.typeButtonTextSelected,
             ]}
           >
-            Personne âgée
+            {t('signup.older')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -141,12 +145,12 @@ const SignupScreen = ({ navigation }) => {
         disabled={isLoading}
       >
         <Text style={styles.buttonText}>
-          {isLoading ? 'Création...' : 'Créer le compte'}
+          {isLoading ? t('signup.creating') : t('signup.create')}
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.link}>Déjà un compte ? Se connecter</Text>
+        <Text style={styles.link}>{t('signup.haveAccount')}</Text>
       </TouchableOpacity>
     </ScrollView>
   );

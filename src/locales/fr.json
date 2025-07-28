@@ -1,0 +1,193 @@
+{
+  "forgotPassword": {
+    "title": "Mot de passe oublié",
+    "emailPlaceholder": "Entrez votre email",
+    "enterEmail": "Veuillez entrer votre email.",
+    "emailNotExist": "Cet email n'existe pas.",
+    "sendCode": "Envoyer le code",
+    "sending": "Envoi...",
+    "codeSent": "Un code a été envoyé à votre email.",
+    "codePlaceholder": "Code de vérification",
+    "enterCode": "Veuillez entrer le code de vérification.",
+    "invalidCode": "Code de vérification invalide.",
+    "verifyCode": "Vérifier le code",
+    "verifying": "Vérification...",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmez le mot de passe",
+    "changePassword": "Changer le mot de passe",
+    "changing": "Changement...",
+    "passwordMismatch": "Les mots de passe ne correspondent pas.",
+    "fillBothFields": "Veuillez remplir les deux champs de mot de passe.",
+    "passwordReset": "Mot de passe changé avec succès.",
+    "resetFailed": "Échec de la réinitialisation du mot de passe.",
+    "restart": "Recommencer"
+  },
+  "toast": {
+    "error": "Erreur",
+    "success": "Succès",
+    "unknownError": "Une erreur inconnue est survenue."
+  },
+  
+  "home": {
+    "appName": "Memoria",
+    "slogan": "IA au service du souvenir.",
+    "login": "Se connecter",
+    "signup": "Créer un compte"
+  },
+
+  "signin": {
+    "title": "Connexion",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "login": "Se connecter",
+    "loggingIn": "Connexion...",
+    "noAccount": "Pas encore de compte ? Créer un compte",
+    "fillAllFields": "Veuillez remplir tous les champs.",
+    "invalidCredentials": "Identifiants invalides."
+  }, "signup": {
+    "title": "Créer un compte",
+    "fullName": "Nom complet",
+    "email": "Email",
+    "password": "Mot de passe",
+    "dob": "Date de naissance (YYYY-MM-DD)",
+    "gender": "Genre (Homme / Femme)",
+    "accountType": "Type de compte",
+    "close": "Proche",
+    "older": "Personne âgée",
+    "create": "Créer le compte",
+    "creating": "Création...",
+    "haveAccount": "Déjà un compte ? Se connecter",
+    "fillAllFields": "Veuillez remplir tous les champs.",
+    "creationFailed": "La création du compte a échoué."
+  },
+  "error": "Erreur",
+  
+  "older": {
+    "welcome": "Bienvenue",
+    "relate": "Relier à un proche âgé",
+    "closeList": "Liste des proches",
+    "logout": "Se déconnecter"
+  },
+    "relateScreen": {
+    "title": "Relier à un proche",
+    "emailPlaceholder": "Email du proche",
+    "relationPlaceholder": "Relation (ex : fille, ami...)",
+    "relateButton": "Relier",
+    "fillAllFields": "Veuillez remplir tous les champs.",
+    "linkSuccess": "Lien créé avec succès.",
+    "linkError": "Impossible de créer le lien."
+  },
+    "closeList": {
+    "title": "Liste des proches",
+    "noData": "Aucun proche trouvé.",
+    "relation": "Relation",
+    "status": {
+      "accepted": "Accepté",
+      "pending": "En attente",
+      "denied": "Refusé"
+    },
+    "resend": "🔄 Renvoyer la demande",
+    "resendSuccess": "Demande renvoyée avec succès.",
+    "resendError": "Impossible de renvoyer la demande."
+  },
+    "closeScreen": {
+    "welcome": "Bienvenue,",
+    "viewRequests": "Voir les demandes des aînés",
+    "logout": "Se déconnecter",
+    "settings": "Paramètres",
+    "profile": "Profil"
+  },
+  "olderRequest": {
+  "title": "Demandes des aînés",
+  "fetchErrorTitle": "Échec du chargement",
+  "fetchErrorMessage": "Veuillez réessayer plus tard.",
+  "relation": "Relation",
+  "sentAt": "Envoyée le",
+  "updatedAt": "Mis à jour le",
+  "noRequests": "Aucune demande pour le moment.",
+  "accept": "Accepter",
+  "decline": "Refuser",
+  "enterCodeTitle": "Entrez le code de vérification",
+  "codePlaceholder": "Code",
+  "confirm": "Confirmer",
+  "cancel": "Annuler",
+  "missingCodeTitle": "Code manquant",
+  "missingCodeMessage": "Veuillez entrer le code.",
+  "serverErrorTitle": "Erreur serveur",
+  "serverErrorMessage": "Veuillez réessayer.",
+  "successTitle": "Succès",
+  "acceptSuccess": "Demande acceptée avec succès.",
+  "declineSuccess": "Demande refusée avec succès.",
+  "wrongCodeTitle": "Code incorrect",
+  "wrongCodeMessage": "Essayez à nouveau."
+},
+ "screen": {
+    "title": "Demandes des aînés",
+    "noRequests": "Aucune demande pour le moment."
+  },
+  "request": {
+    "relation": "Relation",
+    "sentAt": "Envoyée le",
+    "updatedAt": "Mise à jour le"
+  },
+  "status": {
+    "pending": "En attente",
+    "accepted": "Acceptée",
+    "denied": "Refusée"
+  },
+  "actions": {
+    "accept": "Accepter",
+    "decline": "Refuser"
+  },
+  "modal": {
+    "title": "Entrez le code de vérification",
+    "placeholder": "Code",
+    "confirm": "Confirmer",
+    "cancel": "Annuler"
+  },
+  "errors": {
+    "loadingFailed": "Échec du chargement",
+    "tryAgainLater": "Veuillez réessayer plus tard",
+     "incorrectCode": "Code incorrect",
+    "serverError": "Erreur du serveur",
+    "tryAgain": "Veuillez réessayer"
+  },
+  "validation": {
+    "missingCode": "Code manquant",
+    "enterCode": "Veuillez entrer le code"
+  },
+  "success": {
+    "title": "Succès",
+    "accepted": "Demande acceptée avec succès.",
+    "denied": "Demande refusée avec succès."
+  },
+    "settings": {
+  "title": "Paramètres de consentement",
+  "relation": "Relation",
+  "success": "Mis à jour avec succès",
+  "error": "Une erreur s'est produite",
+  "noData": "Aucun aîné lié",
+  "authorizationForTransmission": "Autorisation de transmission"
+  },
+"profile": {
+  "title": "Modifier le profil",
+  "fullName": "Nom complet",
+  "email": "Email",
+  "dateOfBirth": "Date de naissance",
+  "selectDate": "Sélectionner une date",
+  "gender": "Genre",
+  "selectGender": "Sélectionner un genre",
+  "male": "Homme",
+  "female": "Femme",
+  "userStatus": "Statut",
+  "selectStatus": "Sélectionner un statut",
+  "active": "Actif",
+  "suspended": "Suspendu",
+  "authorization": "Autorisation de transmission",
+  "save": "Enregistrer",
+  "success": "Profil mis à jour avec succès !",
+  "error": "Erreur",
+  "fillAllFields": "Veuillez remplir tous les champs requis."
+}
+}
