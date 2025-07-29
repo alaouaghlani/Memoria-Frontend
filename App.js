@@ -23,9 +23,11 @@ const Stack = createNativeStackNavigator();
 
 // ✅ Wrapper to access Redux inside Navigator setup
 const RootNavigation = () => {
-  const isAuthenticated = useSelector(state => state.authentification.isLoggedIn);
+  const isAuthenticated = useSelector(
+    state => state.authentification.isLoggedIn,
+  );
   const initialRoute = isAuthenticated ? 'Main' : 'Home';
-  
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRoute}>
@@ -33,7 +35,15 @@ const RootNavigation = () => {
         <Stack.Screen name="Login" component={SigninScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-        <Stack.Screen name="Main" component={MainScreen} />
+        <Stack.Screen
+          name="Main"
+          component={MainScreen}
+          options={{
+            headerLeft: () => null,
+            gestureEnabled: false,
+            title: 'Memoria',
+          }}
+        />
         <Stack.Screen name="Relate" component={RelateScreen} />
         <Stack.Screen name="CloseList" component={CloseListScreen} />
         <Stack.Screen name="OlderRequests" component={OlderRequestScreen} />
@@ -41,7 +51,6 @@ const RootNavigation = () => {
         <Stack.Screen name="SettingsOlder" component={SettingsOlderScreen} />
         <Stack.Screen name="ProfileClose" component={ProfileCloseScreen} />
         <Stack.Screen name="ProfileOlder" component={ProfileOlderScreen} />
-
       </Stack.Navigator>
     </NavigationContainer>
   );

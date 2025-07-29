@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, AppState, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  AppState,
+  TouchableOpacity,
+} from 'react-native';
 import { useSelector } from 'react-redux';
 import { persistor, store } from '../../shared';
 import { useFocusEffect } from '@react-navigation/native';
@@ -21,7 +29,7 @@ const MainScreen = ({ navigation }) => {
       if (token && email) {
         updateLastActivity({ email });
       }
-    }, [token, email])
+    }, [token, email]),
   );
 
   // last activity on app foreground
@@ -38,29 +46,52 @@ const MainScreen = ({ navigation }) => {
       appState.current = nextAppState;
     };
 
-    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
     return () => subscription.remove();
   }, [token, email]);
 
   const handleLogout = async () => {
     store.dispatch(disconnect());
     await persistor.purge();
-    navigation.replace('Login');
+    navigation.reset({
+      index: 1,
+      routes: [{ name: 'Home' }, { name: 'Login' }],
+    });
   };
 
-  if (kind === "OlderAdult") {
-    return <OlderAdultScreen navigation={navigation} handleLogout={handleLogout} user={user} />;
+  if (kind === 'OlderAdult') {
+    return (
+      <OlderAdultScreen
+        navigation={navigation}
+        handleLogout={handleLogout}
+        user={user}
+      />
+    );
   }
 
-  if (kind === "Close") {
-    return <CloseScreen navigation={navigation} handleLogout={handleLogout} user={user} />;
+  if (kind === 'Close') {
+    return (
+      <CloseScreen
+        navigation={navigation}
+        handleLogout={handleLogout}
+        user={user}
+      />
+    );
   }
 
   return (
     <View style={styles.container}>
       <Text style={styles.subtext}>Utilisateur non reconnu</Text>
-      <TouchableOpacity style={[styles.card, styles.logoutCard]} onPress={handleLogout}>
-        <Text style={[styles.cardTitle, { color: '#dc2626' }]}>🚪 Se déconnecter</Text>
+      <TouchableOpacity
+        style={[styles.card, styles.logoutCard]}
+        onPress={handleLogout}
+      >
+        <Text style={[styles.cardTitle, { color: '#dc2626' }]}>
+          🚪 Se déconnecter
+        </Text>
       </TouchableOpacity>
     </View>
   );

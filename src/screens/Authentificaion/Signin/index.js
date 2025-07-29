@@ -4,11 +4,14 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { store } from '../../../shared';
-import { login, updateLastActivity } from '../../../shared/slice/Auth/AuthService';
+import {
+  login,
+  updateLastActivity,
+} from '../../../shared/slice/Auth/AuthService';
 import {
   setToken,
   setLoggedInUser,
@@ -36,7 +39,10 @@ const SigninScreen = ({ navigation }) => {
       if (response?.data?.signinToken) {
         store.dispatch(setToken({ token: response.data.signinToken }));
         store.dispatch(setLoggedInUser({ user: response.data.user }));
-        navigation.navigate('Main');
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Main' }],
+        });
         await updateLastActivity({ email });
       } else {
         setError(t('signin.invalidCredentials'));
