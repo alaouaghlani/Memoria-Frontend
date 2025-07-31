@@ -60,7 +60,11 @@
     "fillAllFields": "Please fill in all fields.",
     "creationFailed": "Account creation failed."
   },
-  "error": "Error",
+  "error": {
+     "incorrectCode": "Incorrect verification code.",
+    "tryAgain": "Please try again.",
+    "serverError": "Server error occurred."
+  },
   "older": {
     "welcome": "Welcome",
     "relate": "Connect to a close one",
@@ -94,7 +98,8 @@
     "viewRequests": "View older adults' requests",
     "logout": "Logout",
     "settings": "Settings",
-    "profile": "Profile"
+    "profile": "Profile",
+    "DeceasedRequest":"Deceased Request"
   },
   "olderRequest": {
   "title": "Requests from older adults",
@@ -136,14 +141,11 @@
   },
   "actions": {
     "accept": "Accept",
-    "decline": "Decline"
+    "decline": "Decline",
+       "confirmDeath": "Confirm Deceased",
+    "cancelDeath": "Reject"
   },
-  "modal": {
-    "title": "Enter the verification code",
-    "placeholder": "Code",
-    "confirm": "Confirm",
-    "cancel": "Cancel"
-  },
+
   "errors": {
     "loadingFailed": "Failed to load",
     "tryAgainLater": "Please try again later",
@@ -158,7 +160,9 @@
   "success": {
     "title": "Success",
     "accepted": "Request accepted successfully.",
-    "denied": "Request denied successfully."
+    "denied": "Request denied successfully.",
+    "deceasedAccepted": "The deceased status has been confirmed.",
+    "deceasedDenied": "The deceased request has been rejected."
   },
    "settings": {
   "title": "Consent Settings",
@@ -187,5 +191,24 @@
   "success": "Profile updated successfully!",
   "error": "Error",
   "fillAllFields": "Please fill in all the required fields."
-}
+},
+"deceased": {
+    "title": "Deceased Verification Requests",
+    "noRequests": "No deceased verification requests at the moment.",
+    "sentAt": "Request sent at",
+    "updatedAt": "Last updated",
+    "relation": "Relation"
+  },
+  "modal": {
+    "deceasedTitle": "Enter Verification Code",
+    "deceasedPlaceholder": "Enter the deceased verification code",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  }
+  
+ 
+
+ 
+
+  
 }

@@ -8,8 +8,8 @@ import {
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message';
-import { designateHeirs } from '../../shared/slice/OlderAdult/OlderAdultService';
 import { useTranslation } from 'react-i18next';
+import { designateHeirs } from '../../../shared/slice/OlderAdult/OlderAdultService';
 
 const RelateScreen = ({ navigation }) => {
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ const RelateScreen = ({ navigation }) => {
     const data = [{ email, relation }];
     try {
       const response = await designateHeirs(data, currentUser._id);
-
+      
       if (response.success) {
         showToast('success', t('common.success'), t('relateScreen.linkSuccess'));
         navigation.goBack();
@@ -38,6 +38,8 @@ const RelateScreen = ({ navigation }) => {
         showToast('error', t('common.error'), response.message || t('common.genericError'));
       }
     } catch (error) {
+      console.error(error);
+      
       showToast('error', t('common.error'), t('relateScreen.linkError'));
     }
   };

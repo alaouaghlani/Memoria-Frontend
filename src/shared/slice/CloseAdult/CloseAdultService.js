@@ -11,6 +11,7 @@ export const getOlderAdultRequest = id => {
     withSuccessToast: false,
   });
 };
+
 export const updateOlderRequest = (data) => {
   return Executor({
     method: 'post',
@@ -47,3 +48,26 @@ export const updateCloseProfile = (data) => {
   });
 };
 
+
+export const getDeceasedInvitations = id => {
+  return Executor({
+    method: 'get',
+    url: BaseURI + `/memoria/getDeceasedInvitationsByCloseId/${id}`,
+    isSilent: false,
+    successFun: data => {},
+    withErrorToast: false,
+    withSuccessToast: false,
+  });
+};
+
+export const updateDeceasedStatus = (data) => {
+  return Executor({
+    method: 'put',
+    data,
+    url: BaseURI + `/memoria/updatedeceasedstatus`,
+    isSilent: false,
+    successFun: data => {},
+    withErrorToast: false,
+    withSuccessToast: false,
+  });
+};

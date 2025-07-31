@@ -61,7 +61,11 @@
     "fillAllFields": "Veuillez remplir tous les champs.",
     "creationFailed": "La création du compte a échoué."
   },
-  "error": "Erreur",
+  "error":{
+        "incorrectCode": "Code de vérification incorrect.",
+    "tryAgain": "Veuillez réessayer.",
+    "serverError": "Une erreur serveur est survenue."
+  } ,
   
   "older": {
     "welcome": "Bienvenue",
@@ -96,7 +100,8 @@
     "viewRequests": "Voir les demandes des aînés",
     "logout": "Se déconnecter",
     "settings": "Paramètres",
-    "profile": "Profil"
+    "profile": "Profil",
+    "DeceasedRequest":"Demande de décès"
   },
   "olderRequest": {
   "title": "Demandes des aînés",
@@ -138,7 +143,9 @@
   },
   "actions": {
     "accept": "Accepter",
-    "decline": "Refuser"
+    "decline": "Refuser",
+     "confirmDeath": "Confirmer le décès",
+    "cancelDeath": "Rejeter"
   },
   "modal": {
     "title": "Entrez le code de vérification",
@@ -160,7 +167,9 @@
   "success": {
     "title": "Succès",
     "accepted": "Demande acceptée avec succès.",
-    "denied": "Demande refusée avec succès."
+    "denied": "Demande refusée avec succès.",
+    "deceasedAccepted": "Le statut de décès a été confirmé.",
+    "deceasedDenied": "La demande de décès a été rejetée."
   },
     "settings": {
   "title": "Paramètres de consentement",
@@ -189,5 +198,12 @@
   "success": "Profil mis à jour avec succès !",
   "error": "Erreur",
   "fillAllFields": "Veuillez remplir tous les champs requis."
-}
+},
+ "deceased": {
+    "title": "Demandes de vérification de décès",
+    "noRequests": "Aucune demande de vérification de décès pour le moment.",
+    "sentAt": "Demande envoyée le",
+    "updatedAt": "Dernière mise à jour",
+    "relation": "Relation"
+  }
 }

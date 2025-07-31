@@ -38,6 +38,12 @@ const CloseScreen = ({ navigation, handleLogout, user }) => {
         >
           <Text style={styles.cardTitle}>👤 {t('closeScreen.profile')}</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => navigation.navigate('DeceasedRequest')}
+        >
+          <Text style={styles.cardTitle}> {t('closeScreen.DeceasedRequest')}</Text>
+        </TouchableOpacity>
       </View>
 
       <TouchableOpacity

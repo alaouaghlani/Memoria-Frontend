@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export const CloseAdultInitialState = {
   olderRequest: [],
+  deceasedRequest: [],
 };
 
 export const closeAdultSlice = createSlice({
@@ -11,7 +12,10 @@ export const closeAdultSlice = createSlice({
     setOlderRequest: (state, action) => {
       state.olderRequest = action.payload.olderRequest;
     },
+    setDeceasedRequest: (state, action) => {
+      state.deceasedRequest = action.payload.deceasedRequest;
+    },
   },
 });
 
-export const { setOlderRequest } = closeAdultSlice.actions;
+export const { setOlderRequest,setDeceasedRequest } = closeAdultSlice.actions;
