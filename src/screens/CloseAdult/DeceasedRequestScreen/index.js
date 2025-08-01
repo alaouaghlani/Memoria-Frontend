@@ -1,4 +1,3 @@
-// imports remain the same
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -12,32 +11,55 @@ import Toast from 'react-native-toast-message';
 import Modal from 'react-native-modal';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { getDeceasedInvitations, updateDeceasedStatus } from '../../../shared/slice/CloseAdult/CloseAdultService';
+import {
+  getDeceasedHistory,
+  getDeceasedInvitations,
+  updateDeceasedStatus,
+} from '../../../shared/slice/CloseAdult/CloseAdultService';
 import { store } from '../../../shared';
 import { setDeceasedRequest } from '../../../shared/slice/CloseAdult/CloseAdultSlice';
 
 const DeceasedRequestScreen = () => {
   const { t } = useTranslation();
   const currentUser = useSelector(state => state.authentification.loggedInUser);
-  const deceasedRequest = useSelector(state => state.closeAdult.deceasedRequest);
+  const deceasedRequest = useSelector(
+    state => state.closeAdult.deceasedRequest,
+  );
 
+  const [view, setView] = useState('requests');
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAction, setSelectedAction] = useState(null);
   const [selectedOlderId, setSelectedOlderId] = useState(null);
   const [code, setCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [history, setHistory] = useState([]);
+  console.log(history);
 
   useEffect(() => {
     fetchDeceasedRequest();
+    fetchDeceasedHistory();
   }, []);
 
   const fetchDeceasedRequest = async () => {
     try {
       const response = await getDeceasedInvitations(currentUser._id);
       const deceasedInvitation = response?.invitations || [];
-      store.dispatch(setDeceasedRequest({ deceasedRequest: deceasedInvitation }));
+      store.dispatch(
+        setDeceasedRequest({ deceasedRequest: deceasedInvitation }),
+      );
     } catch (error) {
       console.error('Error fetching data:', error);
+      showToast('error', t('errors.loadingFailed'), t('errors.tryAgainLater'));
+    }
+  };
+
+  const fetchDeceasedHistory = async () => {
+    try {
+      const res = await getDeceasedHistory(currentUser._id);
+      const historyData = res?.data || [];
+      setHistory(historyData);
+    } catch (error) {
+      console.error('Error fetching history:', error);
       showToast('error', t('errors.loadingFailed'), t('errors.tryAgainLater'));
     }
   };
@@ -55,7 +77,11 @@ const DeceasedRequestScreen = () => {
 
   const handleConfirmCode = async () => {
     if (!code) {
-      showToast('error', t('validation.missingCode'), t('validation.enterCode'));
+      showToast(
+        'error',
+        t('validation.missingCode'),
+        t('validation.enterCode'),
+      );
       return;
     }
 
@@ -76,12 +102,16 @@ const DeceasedRequestScreen = () => {
           t('success.title'),
           selectedAction === 'ACCEPTED'
             ? t('success.deceasedAccepted')
-            : t('success.deceasedDenied')
+            : t('success.deceasedDenied'),
         );
         setModalVisible(false);
         fetchDeceasedRequest();
       } else {
-        showToast('error', t('error.incorrectCode'), response.msg || t('error.tryAgain'));
+        showToast(
+          'error',
+          t('error.incorrectCode'),
+          response.msg || t('error.tryAgain'),
+        );
       }
     } catch (err) {
       console.error(err);
@@ -96,7 +126,9 @@ const DeceasedRequestScreen = () => {
     const status = item.deceasedStatus;
     const relation = item.relation;
     const sentAt = new Date(item.deceasedSentAt).toLocaleString();
-    const updatedAt = item.updatedAt ? new Date(item.deceasedUpdatedAt).toLocaleString() : null;
+    const updatedAt = item.updatedAt
+      ? new Date(item.deceasedUpdatedAt).toLocaleString()
+      : null;
 
     return (
       <View style={styles.card}>
@@ -105,23 +137,33 @@ const DeceasedRequestScreen = () => {
           <View>
             <Text style={styles.name}>{older.fullName}</Text>
             <Text style={styles.email}>{older.email}</Text>
-            <Text style={styles.relation}>{t('deceased.relation')}: {relation}</Text>
+            <Text style={styles.relation}>
+              {t('deceased.relation')}: {relation}
+            </Text>
           </View>
         </View>
 
-        <Text style={styles.date}>📩 {t('deceased.sentAt')}: {sentAt}</Text>
+        <Text style={styles.date}>
+          📩 {t('deceased.sentAt')}: {sentAt}
+        </Text>
         {updatedAt && (status === 'ACCEPTED' || status === 'DENIED') && (
-          <Text style={styles.date}>🕓 {t('deceased.updatedAt')}: {updatedAt}</Text>
+          <Text style={styles.date}>
+            🕓 {t('deceased.updatedAt')}: {updatedAt}
+          </Text>
         )}
 
-        <View style={[
-          styles.badge,
-          status === 'ACCEPTED' ? styles.badgeAccepted :
-          status === 'DENIED' ? styles.badgeDenied :
-          styles.badgePending
-        ]}>
+        <View
+          style={[
+            styles.badge,
+            status === 'ACCEPTED'
+              ? styles.badgeAccepted
+              : status === 'DENIED'
+              ? styles.badgeDenied
+              : styles.badgePending,
+          ]}
+        >
           <Text style={styles.badgeText}>
-            {t(`status.${status.toLowerCase()}`)}
+            {t(`status.${status?.toLowerCase()}`)}
           </Text>
         </View>
 
@@ -131,13 +173,17 @@ const DeceasedRequestScreen = () => {
               style={styles.confirmBtn}
               onPress={() => promptCode(older._id, 'ACCEPTED')}
             >
-              <Text style={styles.actionText}>✅ {t('actions.confirmDeath')}</Text>
+              <Text style={styles.actionText}>
+                ✅ {t('actions.confirmDeath')}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.rejectBtn}
               onPress={() => promptCode(older._id, 'DENIED')}
             >
-              <Text style={styles.actionText}>❌ {t('actions.cancelDeath')}</Text>
+              <Text style={styles.actionText}>
+                ❌ {t('actions.cancelDeath')}
+              </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -149,17 +195,113 @@ const DeceasedRequestScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>{t('deceased.title')}</Text>
 
-      {deceasedRequest.length === 0 ? (
-        <Text style={styles.noData}>{t('deceased.noRequests')}</Text>
+      {/* Toggle Buttons */}
+      <View style={styles.toggleContainer}>
+        <TouchableOpacity
+          style={[
+            styles.toggleButton,
+            view === 'requests' && styles.activeToggle,
+          ]}
+          onPress={() => {
+            setView('requests');
+          }}
+        >
+          <Text
+            style={[
+              styles.toggleText,
+              view === 'requests' && styles.activeToggleText,
+            ]}
+          >
+            {t('deceased.requests')}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.toggleButton,
+            view === 'history' && styles.activeToggle,
+          ]}
+          onPress={() => {
+            setView('history');
+          }}
+        >
+          <Text
+            style={[
+              styles.toggleText,
+              view === 'history' && styles.activeToggleText,
+            ]}
+          >
+            {t('deceased.history')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* View Content */}
+      {view === 'requests' ? (
+        deceasedRequest.length === 0 ? (
+          <Text style={styles.noData}>{t('deceased.noRequests')}</Text>
+        ) : (
+          <FlatList
+            data={deceasedRequest}
+            keyExtractor={item => item.IDOlderAdult._id}
+            renderItem={renderItem}
+            contentContainerStyle={styles.list}
+          />
+        )
+      ) : history.length === 0 ? (
+        <Text style={styles.noData}>{t('deceased.noHistory')}</Text>
       ) : (
         <FlatList
-          data={deceasedRequest}
-          keyExtractor={item => item.IDOlderAdult._id}
-          renderItem={renderItem}
+          data={history}
+          keyExtractor={item => item._id}
+          renderItem={({ item }) => {
+            const older = item.IDOlderAdult;
+            const status = item.status;
+            const sentAt = new Date(item.sentAt).toLocaleString();
+            const updatedAt = item.updatedAt
+              ? new Date(item.updatedAt).toLocaleString()
+              : null;
+
+            return (
+              <View style={styles.card}>
+                <View style={styles.cardHeader}>
+                  <Text style={styles.emoji}>🕊️</Text>
+                  <View>
+                    <Text style={styles.name}>{older.fullName}</Text>
+                    <Text style={styles.email}>{older.email}</Text>
+                  </View>
+                </View>
+                <Text style={styles.date}>
+                  📩 {t('deceased.sentAt')}: {sentAt}
+                </Text>
+                {updatedAt &&
+                  (status === 'ACCEPTED' || status === 'DENIED') && (
+                    <Text style={styles.date}>
+                      🕓 {t('deceased.updatedAt')}: {updatedAt}
+                    </Text>
+                  )}
+                <View
+                  style={[
+                    styles.badge,
+                    status === 'ACCEPTED'
+                      ? styles.badgeAccepted
+                      : status === 'DENIED'
+                      ? styles.badgeDenied
+                      : styles.badgePending,
+                  ]}
+                >
+                  <Text style={styles.badgeText}>
+                    {t(`status.${status?.toLowerCase()}`)}
+                  </Text>
+                </View>
+              </View>
+            );
+          }}
           contentContainerStyle={styles.list}
         />
       )}
 
+      {/* Modal for code input */}
       <Modal isVisible={modalVisible}>
         <View style={styles.modal}>
           <Text style={styles.modalTitle}>{t('modal.deceasedTitle')}</Text>
@@ -314,6 +456,30 @@ const styles = StyleSheet.create({
   modalActions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  toggleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 16,
+    backgroundColor: '#e5e7eb',
+    borderRadius: 10,
+    padding: 4,
+  },
+  toggleButton: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  toggleText: {
+    color: '#334155',
+    fontWeight: '500',
+  },
+  activeToggle: {
+    backgroundColor: '#3b82f6',
+  },
+  activeToggleText: {
+    color: '#fff',
   },
 });
 

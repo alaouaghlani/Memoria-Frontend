@@ -201,7 +201,10 @@
 },
  "deceased": {
     "title": "Demandes de vérification de décès",
-    "noRequests": "Aucune demande de vérification de décès pour le moment.",
+    "requests": "Demandes en attente",
+    "history": "Historique",
+    "noRequests": "Aucune demande de décès en attente.",
+    "noHistory": "Aucune réponse antérieure trouvée.",
     "sentAt": "Demande envoyée le",
     "updatedAt": "Dernière mise à jour",
     "relation": "Relation"

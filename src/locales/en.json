@@ -95,7 +95,7 @@
   },
    "closeScreen": {
     "welcome": "Welcome,",
-    "viewRequests": "View older adults' requests",
+    "viewRequests": "View older adults requests",
     "logout": "Logout",
     "settings": "Settings",
     "profile": "Profile",
@@ -194,14 +194,19 @@
 },
 "deceased": {
     "title": "Deceased Verification Requests",
+    "requests": "Pending Requests",
+    "history": "History",
     "noRequests": "No deceased verification requests at the moment.",
+    "noHistory": "No past responses found.",
     "sentAt": "Request sent at",
     "updatedAt": "Last updated",
     "relation": "Relation"
   },
   "modal": {
+    "title": "Enter the verification code",
     "deceasedTitle": "Enter Verification Code",
     "deceasedPlaceholder": "Enter the deceased verification code",
+    "placeholder": "Code",
     "confirm": "Confirm",
     "cancel": "Cancel"
   }

@@ -71,3 +71,25 @@ export const updateDeceasedStatus = (data) => {
     withSuccessToast: false,
   });
 };
+
+export const getDeceasedHistory = id => {
+  return Executor({
+    method: 'get',
+    url: BaseURI + `/memoria/deceasedrequesthistory/${id}`,
+    isSilent: false,
+    successFun: data => {},
+    withErrorToast: false,
+    withSuccessToast: false,
+  });
+};
+
+export const getRequestAdultHistory = id => {
+  return Executor({
+    method: 'get',
+    url: BaseURI + `/memoria/getrequesthistory/close/${id}`,
+    isSilent: false,
+    successFun: data => {},
+    withErrorToast: false,
+    withSuccessToast: false,
+  });
+};

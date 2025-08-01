@@ -42,7 +42,7 @@ const CloseScreen = ({ navigation, handleLogout, user }) => {
           style={styles.card}
           onPress={() => navigation.navigate('DeceasedRequest')}
         >
-          <Text style={styles.cardTitle}> {t('closeScreen.DeceasedRequest')}</Text>
+          <Text style={styles.cardTitle}>🕊️ {t('closeScreen.DeceasedRequest')}</Text>
         </TouchableOpacity>
       </View>
 
