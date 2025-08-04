@@ -20,6 +20,7 @@ import ProfileCloseScreen from './src/screens/CloseAdult/ProfileScreen';
 import ProfileOlderScreen from './src/screens/OlderAdult/ProfileScreen';
 import SettingsOlderScreen from './src/screens/OlderAdult/SettingsScreen';
 import DeceasedRequestScreen from './src/screens/CloseAdult/DeceasedRequestScreen';
+import MemoriesScreen from './src/screens/CloseAdult/MemoriesScreen';
 const Stack = createNativeStackNavigator();
 
 // ✅ Wrapper to access Redux inside Navigator setup
@@ -53,6 +54,7 @@ const RootNavigation = () => {
         <Stack.Screen name="ProfileClose" component={ProfileCloseScreen} />
         <Stack.Screen name="ProfileOlder" component={ProfileOlderScreen} />
         <Stack.Screen name="DeceasedRequest" component={DeceasedRequestScreen} />
+        {/* <Stack.Screen name="Memories" component={MemoriesScreen} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -5,110 +5,179 @@ import {
   Text,
   StyleSheet,
   View,
+  Image,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import LinearGradient from 'react-native-linear-gradient';
 
 const CloseScreen = ({ navigation, handleLogout, user }) => {
   const { t } = useTranslation();
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return '🌅 Good morning';
+    if (hour < 18) return '☀️ Good afternoon';
+    return '🌙 Good evening';
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.welcome}>👋 {t('closeScreen.welcome')}</Text>
-      <Text style={styles.username}>{user.fullName}</Text>
+      <LinearGradient
+        colors={['#6366f1', '#8b5cf6']}
+        style={styles.headerGradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <View style={styles.headerContent}>
+          <Image
+            source={
+              user.avatarUrl
+                ? { uri: user.avatarUrl }
+                : require('../../assets/images/avatar-placeholder.png')
+            }
+            style={styles.avatarImage}
+          />
+          <View>
+            <Text style={styles.greetingText}>{getGreeting()},</Text>
+            <Text style={styles.usernameText}>{user.fullName}</Text>
+          </View>
+        </View>
+      </LinearGradient>
 
       <View style={styles.menuContainer}>
-        <TouchableOpacity
-          style={styles.card}
+        <MenuCard
+          icon="inbox"
+          title={t('closeScreen.viewRequests')}
           onPress={() => navigation.navigate('OlderRequests')}
-        >
-          <Text style={styles.cardTitle}>
-            📥 {t('closeScreen.viewRequests')}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.card}
+        />
+        <MenuCard
+          icon="cog"
+          title={t('closeScreen.settings')}
           onPress={() => navigation.navigate('Settings')}
-        >
-          <Text style={styles.cardTitle}>⚙️ {t('closeScreen.settings')}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.card}
+        />
+        <MenuCard
+          icon="user-circle"
+          title={t('closeScreen.profile')}
           onPress={() => navigation.navigate('ProfileClose')}
-        >
-          <Text style={styles.cardTitle}>👤 {t('closeScreen.profile')}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.card}
+        />
+        <MenuCard
+          icon="dove"
+          title={t('closeScreen.DeceasedRequest')}
           onPress={() => navigation.navigate('DeceasedRequest')}
-        >
-          <Text style={styles.cardTitle}>🕊️ {t('closeScreen.DeceasedRequest')}</Text>
-        </TouchableOpacity>
+        />
+        <MenuCard
+          // icon="dove"
+          title={t('closeScreen.Memories')}
+          onPress={() => navigation.navigate('Memories')}
+        />
       </View>
 
-      <TouchableOpacity
-        style={[styles.card, styles.logoutCard]}
-        onPress={handleLogout}
-      >
-        <Text style={styles.logoutText}>🚪 {t('closeScreen.logout')}</Text>
+      <TouchableOpacity style={styles.logoutCard} onPress={handleLogout}>
+        <View style={styles.cardContent}>
+          <FontAwesome5 name="sign-out-alt" size={20} color="#dc2626" />
+          <Text style={styles.logoutText}>{t('closeScreen.logout')}</Text>
+        </View>
       </TouchableOpacity>
     </ScrollView>
   );
 };
+
+const MenuCard = ({ icon, title, onPress }) => (
+  <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
+    <View style={styles.cardContent}>
+      <FontAwesome5 name={icon} size={20} color="#4f46e5" />
+      <Text style={styles.cardTitle}>{title}</Text>
+    </View>
+  </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: '#f0f4ff',
     padding: 24,
-    justifyContent: 'space-between',
     alignItems: 'center',
   },
-  welcome: {
-    fontSize: 18,
-    color: '#4f46e5',
+
+  headerGradient: {
+    width: '100%',
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 32,
+  },
+
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+
+  avatarImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+
+  greetingText: {
+    fontSize: 16,
+    color: '#f3f4f6',
     marginBottom: 4,
-    textAlign: 'center',
   },
-  username: {
-    fontSize: 22,
+
+  usernameText: {
+    fontSize: 20,
     fontWeight: '700',
-    color: '#1f2937',
-    marginBottom: 24,
-    textAlign: 'center',
+    color: '#ffffff',
   },
+
   menuContainer: {
     width: '100%',
-    gap: 12,
+    gap: 16,
   },
+
   card: {
     backgroundColor: '#ffffff',
-    paddingVertical: 18,
+    paddingVertical: 16,
     paddingHorizontal: 20,
-    borderRadius: 12,
+    borderRadius: 16,
     shadowColor: '#000',
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.06,
     shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: 8,
+    elevation: 3,
+    width: '100%',
   },
+
+  cardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+
   cardTitle: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
-    color: '#111827',
+    color: '#1f2937',
   },
+
   logoutCard: {
-    backgroundColor: '#fff0f0',
+    backgroundColor: '#fee2e2',
     borderColor: '#dc2626',
     borderWidth: 1,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderRadius: 16,
     marginTop: 40,
     width: '100%',
   },
+
   logoutText: {
     fontSize: 16,
     fontWeight: '600',
     color: '#dc2626',
-    textAlign: 'center',
   },
 });
 
