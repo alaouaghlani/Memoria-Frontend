@@ -45,33 +45,34 @@ const CloseScreen = ({ navigation, handleLogout, user }) => {
         </View>
       </LinearGradient>
 
-      <View style={styles.menuContainer}>
-        <MenuCard
-          icon="inbox"
-          title={t('closeScreen.viewRequests')}
-          onPress={() => navigation.navigate('OlderRequests')}
-        />
-        <MenuCard
-          icon="cog"
-          title={t('closeScreen.settings')}
-          onPress={() => navigation.navigate('Settings')}
-        />
-        <MenuCard
-          icon="user-circle"
-          title={t('closeScreen.profile')}
-          onPress={() => navigation.navigate('ProfileClose')}
-        />
-        <MenuCard
-          icon="dove"
-          title={t('closeScreen.DeceasedRequest')}
-          onPress={() => navigation.navigate('DeceasedRequest')}
-        />
-        <MenuCard
-          // icon="dove"
-          title={t('closeScreen.Memories')}
-          onPress={() => navigation.navigate('Memories')}
-        />
-      </View>
+     <View style={styles.menuContainer}>
+  <MenuCard
+    icon="inbox"
+    title={t('closeScreen.viewRequests')}
+    onPress={() => navigation.navigate('OlderRequests')}
+  />
+  <MenuCard
+    icon="dove"
+    title={t('closeScreen.DeceasedRequest')}
+    onPress={() => navigation.navigate('DeceasedRequest')}
+  />
+  <MenuCard
+    icon="book-open"
+    title={t('closeScreen.Memories')}
+    onPress={() => navigation.navigate('Memories')}
+  />
+  <MenuCard
+    icon="user-circle"
+    title={t('closeScreen.profile')}
+    onPress={() => navigation.navigate('ProfileClose')}
+  />
+  <MenuCard
+    icon="cog"
+    title={t('closeScreen.settings')}
+    onPress={() => navigation.navigate('Settings')}
+  />
+</View>
+
 
       <TouchableOpacity style={styles.logoutCard} onPress={handleLogout}>
         <View style={styles.cardContent}>

@@ -99,7 +99,8 @@
     "logout": "Logout",
     "settings": "Settings",
     "profile": "Profile",
-    "DeceasedRequest":"Deceased Request"
+    "DeceasedRequest":"Deceased Request",
+    "Memories":"Memories"
   },
   "olderRequest": {
   "title": "Requests from older adults",

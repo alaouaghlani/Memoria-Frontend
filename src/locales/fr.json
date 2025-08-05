@@ -101,7 +101,9 @@
     "logout": "Se déconnecter",
     "settings": "Paramètres",
     "profile": "Profil",
-    "DeceasedRequest":"Demande de décès"
+    "DeceasedRequest":"Demande de décès",
+    "Memories":"Souvenirs"
+
   },
   "olderRequest": {
   "title": "Demandes des aînés",

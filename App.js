@@ -54,7 +54,7 @@ const RootNavigation = () => {
         <Stack.Screen name="ProfileClose" component={ProfileCloseScreen} />
         <Stack.Screen name="ProfileOlder" component={ProfileOlderScreen} />
         <Stack.Screen name="DeceasedRequest" component={DeceasedRequestScreen} />
-        {/* <Stack.Screen name="Memories" component={MemoriesScreen} /> */}
+        <Stack.Screen name="Memories" component={MemoriesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
