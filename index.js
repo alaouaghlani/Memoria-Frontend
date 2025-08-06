@@ -3,7 +3,7 @@ import { name as appName } from './app.json';
 import App from './App';
 import Toast, { BaseToast } from 'react-native-toast-message';
 import LanguageSwitcher from './src/components/LanguageSwitcher';
-import './src/i18n'
+import './src/i18n/i18n'
 const toastConfig = {
   success: (props) => (
     <BaseToast

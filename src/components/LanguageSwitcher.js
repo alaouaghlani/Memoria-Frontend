@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import i18n from '../i18n'; // import initialized instance
+import i18n from '../i18n/i18n'; // import initialized instance
 import { useTranslation } from 'react-i18next';
 
 const LanguageSwitcher = () => {
