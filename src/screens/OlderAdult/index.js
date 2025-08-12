@@ -46,6 +46,11 @@ colors={['#43cea2', '#185a9d']}
 
       <View style={styles.menuContainer}>
         <MenuCard
+          icon="book-open"
+          title={t('older.memories')}
+          onPress={() => navigation.navigate('MemoriesOlder')}
+        />
+        <MenuCard
           icon="user-plus"
           title={t('older.relate')}
           onPress={() => navigation.navigate('Relate')}
