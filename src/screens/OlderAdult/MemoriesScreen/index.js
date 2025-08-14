@@ -1,10 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Platform, PermissionsAndroid } from 'react-native';
+import { View, Text, Platform, PermissionsAndroid, Button } from 'react-native';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import RNFS from 'react-native-fs';
 import Tts from 'react-native-tts';
 import SoundLevel from 'react-native-sound-level';
-import { AudioEncoderAndroidType, AudioSourceAndroidType, AVEncoderAudioQualityIOSType, AVEncodingOption } from 'react-native-audio-recorder-player';
+import {
+  AudioEncoderAndroidType,
+  AudioSourceAndroidType,
+  AVEncoderAudioQualityIOSType,
+  AVEncodingOption,
+} from 'react-native-audio-recorder-player';
 
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
@@ -12,6 +17,7 @@ const MemoriesScreenOlder = () => {
   const [audioPath, setAudioPath] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const lastVoiceTimeRef = useRef(Date.now());
   const recordingActiveRef = useRef(false);
@@ -33,7 +39,6 @@ const MemoriesScreenOlder = () => {
     if (!hasPermission) return;
 
     try {
-      // Stop lingering recorder
       await audioRecorderPlayer.stopRecorder().catch(() => {});
       audioRecorderPlayer.removeRecordBackListener();
 
@@ -45,7 +50,7 @@ const MemoriesScreenOlder = () => {
       console.log('Recording started');
       setIsRecording(true);
       recordingActiveRef.current = true;
-      lastVoiceTimeRef.current = Date.now(); // reset silence timer
+      lastVoiceTimeRef.current = Date.now();
 
       const uri = await audioRecorderPlayer.startRecorder(path, {
         AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
@@ -57,15 +62,13 @@ const MemoriesScreenOlder = () => {
       });
       setAudioPath(uri);
 
-      // --- Start sound level listener ---
       SoundLevel.start();
       SoundLevel.onNewFrame = (data) => {
         if (!recordingActiveRef.current || isSpeaking) return;
 
         if (data.value > -50) {
-          lastVoiceTimeRef.current = Date.now(); // voice detected, reset timer
+          lastVoiceTimeRef.current = Date.now();
         } else {
-          // Only stop after 3 seconds of continuous silence
           if (Date.now() - lastVoiceTimeRef.current > 3000) {
             console.log('Silence detected, stopping recording...');
             stopRecording();
@@ -126,12 +129,11 @@ const MemoriesScreenOlder = () => {
         const cleanAnswer = json.answer.replace(/\([^)]*\)/g, '').trim();
         speakAIText(cleanAnswer);
       } else {
-        // No answer → restart recording
-        setTimeout(startRecording, 500); // small delay before restarting
+        setTimeout(startRecording, 500);
       }
     } catch (e) {
       console.error('Upload failed', e);
-      setTimeout(startRecording, 500); // retry recording after error
+      setTimeout(startRecording, 500);
     }
   };
 
@@ -143,15 +145,36 @@ const MemoriesScreenOlder = () => {
     Tts.setDefaultLanguage('fr-FR');
     Tts.speak(text);
 
-    // Wait for TTS to finish before restarting recording with a short delay
     const finishListener = Tts.addEventListener('tts-finish', () => {
       setIsSpeaking(false);
       finishListener.remove();
       setTimeout(() => {
-        lastVoiceTimeRef.current = Date.now(); // reset silence timer after AI speaks
+        lastVoiceTimeRef.current = Date.now();
         startRecording();
-      }, 2500); // 1.5 sec delay
+      }, 2500);
     });
+  };
+
+  // --- Play last recorded audio ---
+  const playLastAudio = async () => {
+    if (!audioPath) {
+      console.log('No audio to play.');
+      return;
+    }
+    try {
+      console.log('Playing audio:', audioPath);
+      setIsPlaying(true);
+      await audioRecorderPlayer.startPlayer(audioPath);
+      audioRecorderPlayer.addPlayBackListener((e) => {
+        if (e.currentPosition >= e.duration) {
+          setIsPlaying(false);
+          audioRecorderPlayer.stopPlayer();
+        }
+      });
+    } catch (e) {
+      console.error('Failed to play audio', e);
+      setIsPlaying(false);
+    }
   };
 
   // --- Auto start recording on mount ---
@@ -170,6 +193,7 @@ const MemoriesScreenOlder = () => {
     <View style={{ padding: 20 }}>
       <Text>{isRecording ? '🎤 Recording...' : 'AI Thinking...'}</Text>
       <Text>{isSpeaking ? '🗣 AI Speaking...' : ''}</Text>
+      <Button title="▶ Play Last Audio" onPress={playLastAudio} disabled={!audioPath || isPlaying} />
     </View>
   );
 };
