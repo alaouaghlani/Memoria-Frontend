@@ -8,7 +8,7 @@ import { olderAdultSlice } from './slice/OlderAdult/OlderAdultSlice';
 import { closeAdultSlice } from './slice/CloseAdult/CloseAdultSlice';
 
 // export const BaseURI = 'http://10.0.2.2:3001';
-export const BaseURI = 'http://192.168.1.24:3001';
+export const BaseURI = 'http://192.168.1.7:3001';
 
 const persistConfig = {
   key: 'root',
