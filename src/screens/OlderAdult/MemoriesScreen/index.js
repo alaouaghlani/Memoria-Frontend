@@ -21,6 +21,11 @@ const socket = io("https://test.realitybird.com", {
 });
 socket.on("connect", () => {
   console.log("✅ Socket connected! ID:", socket.id);
+
+
+  // Join the test room
+  socket.emit("join_room", "test_vocal");
+  console.log('📥 Joined room: test_vocal');
 });
 
 socket.on("disconnect", (reason) => {
@@ -192,8 +197,9 @@ const sendAudio = async (path) => {
       setAssistantAnswer(prev => prev + data);
     });
 
-    socket.on('stream-end', () => {
-      console.log('✅ Stream finished, final answer:', assistantAnswer);
+socket.on('stream-end', (data) => {
+console.log("transcription",data);
+      console.log(':white_check_mark: Stream finished, final answer:', assistantAnswer);
       const clean = assistantAnswer.replace(/\([^)]*\)/g, '').trim();
       speakAIText(clean);
     });
