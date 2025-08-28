@@ -11,7 +11,7 @@ const socket = io("https://test.realitybird.com", {
 
 socket.on("connect", () => {
   console.log("✅ Socket connected! ID:", socket.id);
-  socket.emit("join_room", "test_vocal");
+  socket.emit("join_room", "test_vocal1");
 });
 
 const MemoriesScreenOlder = () => {
@@ -20,64 +20,117 @@ const MemoriesScreenOlder = () => {
   const timeoutRef = useRef(null);
   const bufferRef = useRef(""); // accumulate partial text
 
-  // --- Envoi automatique via socket après 3 secondes d'inactivité ---
+  // --- Clean text (remove parentheses + unwanted prefixes + leading ?)
+  const cleanText = (txt) =>
+    txt
+      .replace(/\([^)]*\)/g, "")       // remove ( ... )
+      .replace(/^assist\s*\?/i, "")    // remove "assist ?"
+      .replace(/answer:\s*/gi, "")     // remove "Answer:"
+      .replace(/^[\?\s]+/, "")         // remove leading ? and spaces
+      .trim();
+
+  // --- Language detection ---
+  const detectLanguage = (text) => {
+    const cleaned = text.toLowerCase();
+
+    const frenchWords = [
+      // Pronouns
+      "je","tu","il","elle","nous","vous","ils","elles","on",
+      // Articles
+      "le","la","les","un","une","des","du","de la","au","aux","ce","cet","cette","ces",
+      // Prepositions & conjunctions
+      "à","dans","en","par","pour","avec","sans","sur","sous","entre","mais","ou","donc","car","quand","que","si",
+      // Adverbs
+      "très","bien","mal","souvent","parfois","jamais","toujours","déjà","encore","bientôt","ici","là","partout","ici","là-bas","ailleurs",
+      // Common verbs
+      "être","avoir","aller","faire","dire","pouvoir","savoir","voir","venir","devoir","prendre","mettre","vouloir","falloir","aimer","parler","manger","boire","dormir","travailler","jouer","vivre","comprendre","apprendre",
+      // Common nouns / everyday words
+      "jour","nuit","temps","main","enfant","homme","femme","pain","baguette","merci","bonjour","salut","maison","école","travail","eau","nourriture","ami","amour","famille","voiture","ville","pays","chien","chat","ordinateur","téléphone","livre","musique","film"
+    ];
+
+    const englishWords = [
+      "i","you","he","she","we","they","yes","no",
+      "thank","hello","good","bad","because","what","how"
+    ];
+
+    let frCount = 0, enCount = 0;
+    frenchWords.forEach(w => { if (cleaned.includes(` ${w} `)) frCount++; });
+    englishWords.forEach(w => { if (cleaned.includes(` ${w} `)) enCount++; });
+    if (/[éèêàùçôûîïœ]/.test(cleaned)) frCount++;
+
+    return frCount >= enCount ? "fr" : "en";
+  };
+
+  // --- Speak sentence ---
+  const speakSentence = async (sentence) => {
+    const cleaned = cleanText(sentence);
+    if (!cleaned) return;
+
+    const lang = detectLanguage(cleaned);
+
+    try {
+      if (lang === "fr") {
+        await Tts.setDefaultVoice("fr-fr-x-frc-local"); // force French
+      } else {
+        await Tts.setDefaultLanguage("en-US"); // fallback English
+      }
+    } catch (err) {
+      console.warn("⚠️ Voice selection error:", err);
+    }
+
+    Tts.speak(cleaned, {
+      rate: 0.95,
+      androidParams: {
+        KEY_PARAM_PAN: 0,
+        KEY_PARAM_VOLUME: 1,
+        KEY_PARAM_STREAM: 'STREAM_MUSIC',
+      },
+    });
+  };
+
+  // --- Send text after 3 seconds of inactivity ---
   useEffect(() => {
     if (!recognizedText) return;
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
     timeoutRef.current = setTimeout(() => {
       socket.emit('voice', { requestText: recognizedText });
-      console.log('📤 Text sent via socket:', recognizedText);
       setRecognizedText('');
     }, 3000);
 
     return () => clearTimeout(timeoutRef.current);
   }, [recognizedText]);
 
-  // --- Réception des réponses serveur ---
+  // --- Receive AI responses ---
   useEffect(() => {
-    const speakSentence = (sentence) => {
-      // Remove parentheses and their content
-      const cleaned = sentence.replace(/\([^)]*\)/g, "").trim();
-
-      if (cleaned) {
-        Tts.speak(cleaned, {
-          rate: 0.95, // natural pace
-          androidParams: {
-            KEY_PARAM_PAN: 0,
-            KEY_PARAM_VOLUME: 1,
-            KEY_PARAM_STREAM: 'STREAM_MUSIC',
-          },
-        });
-      }
-    };
-
     const handleStream = (data) => {
       bufferRef.current += data;
-      setAssistantAnswer(prev => prev + data);
 
-      // Detect full sentences ending with ., ?, or !
+      // Split buffer into sentences
       const sentenceRegex = /([^.?!]*[.?!])/g;
       let match;
-      let consumed = 0;
+      let lastIndex = 0;
 
       while ((match = sentenceRegex.exec(bufferRef.current)) !== null) {
         const sentence = match[0];
-        speakSentence(sentence);
-        consumed = sentenceRegex.lastIndex;
+        speakSentence(sentence); // speak only complete sentences
+        lastIndex = sentenceRegex.lastIndex;
       }
 
-      // Keep unfinished part in buffer
-      bufferRef.current = bufferRef.current.slice(consumed);
+      // Keep unfinished sentence in buffer
+      const spokenPart = bufferRef.current.slice(0, lastIndex);
+      bufferRef.current = bufferRef.current.slice(lastIndex);
+
+      // Append spoken part to displayed text
+      const cleanedChunk = cleanText(spokenPart);
+      if (cleanedChunk) setAssistantAnswer(prev => prev + cleanedChunk + " ");
     };
 
     const handleStreamEnd = () => {
-      console.log('✅ Stream finished');
-
-      // Speak leftover if any
-      if (bufferRef.current.trim()) {
-        const cleaned = bufferRef.current.replace(/\([^)]*\)/g, "").trim();
-        if (cleaned) Tts.speak(cleaned, { rate: 0.95 });
+      const finalChunk = cleanText(bufferRef.current);
+      if (finalChunk) {
+        speakSentence(finalChunk);
+        setAssistantAnswer(prev => prev + finalChunk + " ");
         bufferRef.current = "";
       }
     };
