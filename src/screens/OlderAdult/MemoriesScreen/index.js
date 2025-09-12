@@ -1,167 +1,94 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput } from 'react-native';
-import io from 'socket.io-client';
+import React, { useState } from 'react';
+import { View, Text, Button, PermissionsAndroid, Platform } from 'react-native';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import axios from 'axios';
 import Tts from 'react-native-tts';
 
-// --- Connexion socket ---
-const socket = io("https://test.realitybird.com", {
-  path: "/backend-socket/socket.io",
-  transports: ["websocket"],
-});
-
-socket.on("connect", () => {
-  console.log("✅ Socket connected! ID:", socket.id);
-  socket.emit("join_room", "test_vocal1");
-});
+const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const MemoriesScreenOlder = () => {
+  const [recording, setRecording] = useState(false);
   const [recognizedText, setRecognizedText] = useState('');
   const [assistantAnswer, setAssistantAnswer] = useState('');
-  const timeoutRef = useRef(null);
-  const bufferRef = useRef(""); // accumulate partial text
 
-  // --- Clean text (remove parentheses + unwanted prefixes + leading ?)
-  const cleanText = (txt) =>
-    txt
-      .replace(/\([^)]*\)/g, "")       // remove ( ... )
-      .replace(/^assist\s*\?/i, "")    // remove "assist ?"
-      .replace(/answer:\s*/gi, "")     // remove "Answer:"
-      .replace(/^[\?\s]+/, "")         // remove leading ? and spaces
-      .trim();
-
-  // --- Language detection ---
-  const detectLanguage = (text) => {
-    const cleaned = text.toLowerCase();
-
-    const frenchWords = [
-      // Pronouns
-      "je","tu","il","elle","nous","vous","ils","elles","on",
-      // Articles
-      "le","la","les","un","une","des","du","de la","au","aux","ce","cet","cette","ces",
-      // Prepositions & conjunctions
-      "à","dans","en","par","pour","avec","sans","sur","sous","entre","mais","ou","donc","car","quand","que","si",
-      // Adverbs
-      "très","bien","mal","souvent","parfois","jamais","toujours","déjà","encore","bientôt","ici","là","partout","ici","là-bas","ailleurs",
-      // Common verbs
-      "être","avoir","aller","faire","dire","pouvoir","savoir","voir","venir","devoir","prendre","mettre","vouloir","falloir","aimer","parler","manger","boire","dormir","travailler","jouer","vivre","comprendre","apprendre",
-      // Common nouns / everyday words
-      "jour","nuit","temps","main","enfant","homme","femme","pain","baguette","merci","bonjour","salut","maison","école","travail","eau","nourriture","ami","amour","famille","voiture","ville","pays","chien","chat","ordinateur","téléphone","livre","musique","film"
-    ];
-
-    const englishWords = [
-      "i","you","he","she","we","they","yes","no",
-      "thank","hello","good","bad","because","what","how"
-    ];
-
-    let frCount = 0, enCount = 0;
-    frenchWords.forEach(w => { if (cleaned.includes(` ${w} `)) frCount++; });
-    englishWords.forEach(w => { if (cleaned.includes(` ${w} `)) enCount++; });
-    if (/[éèêàùçôûîïœ]/.test(cleaned)) frCount++;
-
-    return frCount >= enCount ? "fr" : "en";
+  // 🔒 Request mic permission
+  const requestAudioPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+          {
+            title: 'Microphone Permission',
+            message:
+              'This app needs access to your microphone to record audio.',
+            buttonPositive: 'OK',
+          },
+        );
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn('Permission error:', err);
+        return false;
+      }
+    }
+    return true;
   };
 
-  // --- Speak sentence ---
-  const speakSentence = async (sentence) => {
-    const cleaned = cleanText(sentence);
-    if (!cleaned) return;
-
-    const lang = detectLanguage(cleaned);
-
-    try {
-      if (lang === "fr") {
-        await Tts.setDefaultVoice("fr-fr-x-frc-local"); // force French
-      } else {
-        await Tts.setDefaultLanguage("en-US"); // fallback English
-      }
-    } catch (err) {
-      console.warn("⚠️ Voice selection error:", err);
+  // 🎤 Start recording
+  const startRecording = async () => {
+    const hasPermission = await requestAudioPermission();
+    if (!hasPermission) {
+      console.warn('❌ Mic permission not granted');
+      return;
     }
 
-    Tts.speak(cleaned, {
-      rate: 0.95,
-      androidParams: {
-        KEY_PARAM_PAN: 0,
-        KEY_PARAM_VOLUME: 1,
-        KEY_PARAM_STREAM: 'STREAM_MUSIC',
-      },
-    });
+    setRecording(true);
+    const uri = await audioRecorderPlayer.startRecorder();
   };
 
-  // --- Send text after 3 seconds of inactivity ---
-  useEffect(() => {
-    if (!recognizedText) return;
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  // ⏹ Stop + send to backend
+  const stopRecording = async () => {
+    const result = await audioRecorderPlayer.stopRecorder();
+    setRecording(false);
 
-    timeoutRef.current = setTimeout(() => {
-      socket.emit('voice', { requestText: recognizedText });
-      setRecognizedText('');
-    }, 3000);
+    const formData = new FormData();
+    formData.append('audio', {
+      uri: result.startsWith('file://') ? result : `file://${result}`,
+      type: 'audio/m4a', // ✅ use m4a instead of mp4
+      name: 'voice.m4a',
+    });
 
-    return () => clearTimeout(timeoutRef.current);
-  }, [recognizedText]);
+    try {
+      const response = await axios.post(
+        'https://test.realitybird.com/memoria-backend/memoria/voice',
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        },
+      );
 
-  // --- Receive AI responses ---
-  useEffect(() => {
-    const handleStream = (data) => {
-      bufferRef.current += data;
+      const { transcription, reply } = response.data;
+      setRecognizedText(transcription);
+      setAssistantAnswer(reply);
 
-      // Split buffer into sentences
-      const sentenceRegex = /([^.?!]*[.?!])/g;
-      let match;
-      let lastIndex = 0;
-
-      while ((match = sentenceRegex.exec(bufferRef.current)) !== null) {
-        const sentence = match[0];
-        speakSentence(sentence); // speak only complete sentences
-        lastIndex = sentenceRegex.lastIndex;
-      }
-
-      // Keep unfinished sentence in buffer
-      const spokenPart = bufferRef.current.slice(0, lastIndex);
-      bufferRef.current = bufferRef.current.slice(lastIndex);
-
-      // Append spoken part to displayed text
-      const cleanedChunk = cleanText(spokenPart);
-      if (cleanedChunk) setAssistantAnswer(prev => prev + cleanedChunk + " ");
-    };
-
-    const handleStreamEnd = () => {
-      const finalChunk = cleanText(bufferRef.current);
-      if (finalChunk) {
-        speakSentence(finalChunk);
-        setAssistantAnswer(prev => prev + finalChunk + " ");
-        bufferRef.current = "";
-      }
-    };
-
-    socket.on('stream', handleStream);
-    socket.on('stream-end', handleStreamEnd);
-
-    return () => {
-      socket.off('stream', handleStream);
-      socket.off('stream-end', handleStreamEnd);
-    };
-  }, []);
+      // 🗣 Speak reply
+      await Tts.setDefaultLanguage('fr-FR');
+      Tts.speak(reply);
+    } catch (err) {
+      console.error('Upload error:', err);
+    }
+  };
 
   return (
     <View style={{ padding: 20 }}>
-      <Text style={{ marginBottom: 10 }}>
-        🎤 Tapez ou utilisez le micro du clavier pour dicter :
-      </Text>
-      <TextInput
-        placeholder="Tapez ou utilisez la dictée"
-        value={recognizedText}
-        onChangeText={setRecognizedText}
-        style={{
-          borderWidth: 1,
-          borderRadius: 5,
-          padding: 10,
-          minHeight: 50,
-        }}
-        multiline
+      <Text style={{ marginBottom: 10 }}>🎤 Press record to talk</Text>
+
+      <Button
+        title={recording ? '⏹ Stop Recording' : '🎙 Start Recording'}
+        onPress={recording ? stopRecording : startRecording}
       />
-      <Text style={{ marginTop: 20 }}>AI: {assistantAnswer}</Text>
+
+      <Text style={{ marginTop: 20 }}>📝 You said: {recognizedText}</Text>
+      <Text style={{ marginTop: 20 }}>🤖 AI replied: {assistantAnswer}</Text>
     </View>
   );
 };
