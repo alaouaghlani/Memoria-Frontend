@@ -42,7 +42,7 @@ const DeceasedRequestScreen = () => {
 
   const fetchDeceasedRequest = async () => {
     try {
-      const response = await getDeceasedInvitations(currentUser._id);
+      const response = await getDeceasedInvitations(currentUser.id);
       const deceasedInvitation = response?.invitations || [];
       store.dispatch(
         setDeceasedRequest({ deceasedRequest: deceasedInvitation }),
@@ -55,7 +55,7 @@ const DeceasedRequestScreen = () => {
 
   const fetchDeceasedHistory = async () => {
     try {
-      const res = await getDeceasedHistory(currentUser._id);
+      const res = await getDeceasedHistory(currentUser.id);
       const historyData = res?.data || [];
       setHistory(historyData);
     } catch (error) {
@@ -90,7 +90,7 @@ const DeceasedRequestScreen = () => {
       const payload = {
         IDOlderAdult: selectedOlderId,
         deceasedStatus: selectedAction,
-        IDClose: currentUser._id,
+        IDClose: currentUser.id,
         verificationCode: code,
       };
 
@@ -171,7 +171,7 @@ const DeceasedRequestScreen = () => {
           <View style={styles.actionRow}>
             <TouchableOpacity
               style={styles.confirmBtn}
-              onPress={() => promptCode(older._id, 'ACCEPTED')}
+              onPress={() => promptCode(older.id, 'ACCEPTED')}
             >
               <Text style={styles.actionText}>
                 ✅ {t('actions.confirmDeath')}
@@ -179,7 +179,7 @@ const DeceasedRequestScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.rejectBtn}
-              onPress={() => promptCode(older._id, 'DENIED')}
+              onPress={() => promptCode(older.id, 'DENIED')}
             >
               <Text style={styles.actionText}>
                 ❌ {t('actions.cancelDeath')}
@@ -243,7 +243,7 @@ const DeceasedRequestScreen = () => {
         ) : (
           <FlatList
             data={deceasedRequest}
-            keyExtractor={item => item.IDOlderAdult._id}
+            keyExtractor={item => item.IDOlderAdult.id}
             renderItem={renderItem}
             contentContainerStyle={styles.list}
           />
@@ -253,7 +253,7 @@ const DeceasedRequestScreen = () => {
       ) : (
         <FlatList
           data={history}
-          keyExtractor={item => item._id}
+          keyExtractor={item => item.id}
           renderItem={({ item }) => {
             const older = item.IDOlderAdult;
             const status = item.status;

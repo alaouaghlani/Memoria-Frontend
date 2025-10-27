@@ -24,7 +24,7 @@ const CloseListScreen = ({ navigation }) => {
 
   const fetchCloseList = async () => {
     try {
-      const response = await getCloseAdult(currentUser._id);
+      const response = await getCloseAdult(currentUser.id);
       store.dispatch(setCloseList({ closeList: response.data }));
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -49,7 +49,7 @@ const CloseListScreen = ({ navigation }) => {
     const data = [{ email: item.email, relation: item.olderAdults[0].relation }];
 
     try {
-      const response = await designateHeirs(data, currentUser._id);
+      const response = await designateHeirs(data, currentUser.id);
       if (response.success) {
         showToast('success', t('closeList.resendSuccess'), '');
         fetchCloseList();
@@ -107,7 +107,7 @@ const CloseListScreen = ({ navigation }) => {
       ) : (
         <FlatList
           data={closeList}
-          keyExtractor={item => item._id}
+          keyExtractor={item => item.id}
           renderItem={renderItem}
           contentContainerStyle={styles.list}
         />

@@ -93,3 +93,15 @@ export const getRequestAdultHistory = id => {
     withSuccessToast: false,
   });
 };
+
+export const updatefcmtoken = (data) => {
+  return Executor({
+    method: 'put',
+    data,
+    url: BaseURI + `/memoria/updatefcmtoken`,
+    isSilent: false,
+    successFun: data => {},
+    withErrorToast: false,
+    withSuccessToast: false,
+  });
+};

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "802258587726",
+    "project_id": "realitybird",
+    "storage_bucket": "realitybird.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802258587726:android:39b0f2c2936c7451ef731f",
+        "android_client_info": {
+          "package_name": "com.memoria"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADgPDQm1Z3ebK2GRuIlx99g2C3V4lOcd8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

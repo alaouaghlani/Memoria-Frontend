@@ -32,7 +32,7 @@ const SettingsScreen = () => {
   const handleToggleConsent = async (consentGiven, IDOlderAdult) => {
     try {
       const res = await updateConsent({
-        IDClose: user._id,
+        IDClose: user.id,
         IDOlderAdult,
         consentGiven,
       });

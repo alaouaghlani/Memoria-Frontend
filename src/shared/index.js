@@ -7,8 +7,10 @@ import { authentificationSlice } from './slice/Auth/AuthSlice';
 import { olderAdultSlice } from './slice/OlderAdult/OlderAdultSlice';
 import { closeAdultSlice } from './slice/CloseAdult/CloseAdultSlice';
 
-// export const BaseURI = 'http://10.0.2.2:3001';
-export const BaseURI = 'https://test.realitybird.com/memoria-backend/';
+// export const BaseURI = 'http://10.0.2.2:9000';
+// export const BaseURI = 'https://192.168.1.2:9000';
+export const BaseURI = 'http://192.168.1.26:9000';
+// export const BaseURI = 'https://test.realitybird.com/memoria-backend/';
 
 const persistConfig = {
   key: 'root',

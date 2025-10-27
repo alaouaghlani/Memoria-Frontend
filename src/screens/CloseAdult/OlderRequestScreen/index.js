@@ -41,7 +41,7 @@ const OlderRequestScreen = () => {
 
   const fetchRequestAdult = async () => {
     try {
-      const response = await getOlderAdultRequest(currentUser._id);
+      const response = await getOlderAdultRequest(currentUser.id);
       const olderAdults = response?.close?.olderAdults || [];
       store.dispatch(setOlderRequest({ olderRequest: olderAdults }));
     } catch (error) {
@@ -52,7 +52,7 @@ const OlderRequestScreen = () => {
 
   const fetchRequestAdultHistory = async () => {
     try {
-      const res = await getRequestAdultHistory(currentUser._id);
+      const res = await getRequestAdultHistory(currentUser.id);
       const historyData = res?.data || [];
       setHistory(historyData);
     } catch (error) {
@@ -87,7 +87,7 @@ const OlderRequestScreen = () => {
       const payload = {
         IDOlderAdult: selectedOlderId,
         status: selectedAction,
-        IDClose: currentUser._id,
+        IDClose: currentUser.id,
         verificationCode: code,
       };
 
@@ -168,14 +168,14 @@ const OlderRequestScreen = () => {
           <View style={styles.buttonRow}>
             <TouchableOpacity
               style={styles.acceptButton}
-              onPress={() => promptCode(older._id, 'ACCEPTED')}
+              onPress={() => promptCode(older.id, 'ACCEPTED')}
             >
               <Text style={styles.buttonText}>✅ {t('actions.accept')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.declineButton}
-              onPress={() => promptCode(older._id, 'DENIED')}
+              onPress={() => promptCode(older.id, 'DENIED')}
             >
               <Text style={styles.buttonText}>❌ {t('actions.decline')}</Text>
             </TouchableOpacity>
@@ -236,7 +236,7 @@ const OlderRequestScreen = () => {
         ) : (
           <FlatList
             data={olderRequest}
-            keyExtractor={item => item.IDOlderAdult._id}
+            keyExtractor={item => item.IDOlderAdult.id}
             renderItem={renderItem}
             contentContainerStyle={styles.list}
           />
@@ -246,7 +246,7 @@ const OlderRequestScreen = () => {
       ) : (
         <FlatList
           data={history}
-          keyExtractor={item => item._id}
+          keyExtractor={item => item.id}
           renderItem={({ item }) => {
             const older = item.IDOlderAdult;
             const status = item.status;

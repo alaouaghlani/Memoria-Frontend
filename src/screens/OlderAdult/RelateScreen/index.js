@@ -29,7 +29,7 @@ const RelateScreen = ({ navigation }) => {
 
     const data = [{ email, relation }];
     try {
-      const response = await designateHeirs(data, currentUser._id);
+      const response = await designateHeirs(data, currentUser.id);
       
       if (response.success) {
         showToast('success', t('common.success'), t('relateScreen.linkSuccess'));
