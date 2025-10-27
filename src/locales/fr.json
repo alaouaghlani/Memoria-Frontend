@@ -59,7 +59,10 @@
     "creating": "Création...",
     "haveAccount": "Déjà un compte ? Se connecter",
     "fillAllFields": "Veuillez remplir tous les champs.",
-    "creationFailed": "La création du compte a échoué."
+    "creationFailed": "La création du compte a échoué.",
+    "male": "Homme",
+  "female": "Femme"
+
   },
   "error":{
         "incorrectCode": "Code de vérification incorrect.",

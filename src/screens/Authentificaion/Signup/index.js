@@ -6,7 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
+  Platform,
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Toast from 'react-native-toast-message';
 import { signup } from '../../../shared/slice/Auth/AuthService';
 import { useTranslation } from 'react-i18next';
@@ -21,8 +23,11 @@ const SignupScreen = ({ navigation }) => {
     gender: '',
     type: '',
   });
+console.log(form);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showGenderOptions, setShowGenderOptions] = useState(false);
 
   const showToast = (type, text1, text2) => {
     Toast.show({ type, text1, text2 });
@@ -40,18 +45,25 @@ const SignupScreen = ({ navigation }) => {
       return;
     }
 
+    // ✅ Convert from "DD/MM/YYYY" to "YYYY-MM-DD" before sending
+  let formattedDate = dateOfBirth;
+if (formattedDate.includes('/')) {
+  const [day, month, year] = formattedDate.split('/');
+  formattedDate = `${year}/${month}/${day}`; // ✅ Your required format
+}
+
     const payload = {
       fullName,
       email,
       password,
-      dateOfBirth,
+      dateOfBirth: formattedDate,
       gender: gender.trim().toUpperCase(),
       type,
     };
 
     try {
       setIsLoading(true);
-      const response = await signup(payload);
+      await signup(payload);
       navigation.navigate('Login');
     } catch (err) {
       console.error('Signup error:', err);
@@ -65,6 +77,7 @@ const SignupScreen = ({ navigation }) => {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>{t('signup.title')}</Text>
 
+      {/* Full name */}
       <TextInput
         style={styles.input}
         placeholder={t('signup.fullName')}
@@ -72,6 +85,7 @@ const SignupScreen = ({ navigation }) => {
         onChangeText={text => handleChange('fullName', text)}
       />
 
+      {/* Email */}
       <TextInput
         style={styles.input}
         placeholder={t('signup.email')}
@@ -80,6 +94,7 @@ const SignupScreen = ({ navigation }) => {
         onChangeText={text => handleChange('email', text)}
       />
 
+      {/* Password */}
       <TextInput
         style={styles.input}
         placeholder={t('signup.password')}
@@ -88,20 +103,73 @@ const SignupScreen = ({ navigation }) => {
         onChangeText={text => handleChange('password', text)}
       />
 
-      <TextInput
-        style={styles.input}
-        placeholder={t('signup.dob')}
-        value={form.dateOfBirth}
-        onChangeText={text => handleChange('dateOfBirth', text)}
-      />
+      {/* Date of birth */}
+      <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+        <TextInput
+          style={styles.input}
+          placeholder={t('signup.dob')}
+          value={form.dateOfBirth ? form.dateOfBirth : ''}
+          editable={false}
+          pointerEvents="none"
+        />
+      </TouchableOpacity>
 
-      <TextInput
-        style={styles.input}
-        placeholder={t('signup.gender')}
-        value={form.gender}
-        onChangeText={text => handleChange('gender', text)}
-      />
+      {showDatePicker && (
+        <DateTimePicker
+          value={form.dateOfBirth ? new Date(form.dateOfBirth) : new Date()}
+          mode="date"
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+          onChange={(event, selectedDate) => {
+            setShowDatePicker(false);
+            if (selectedDate) {
+              // 🔹 Store display value as "DD/MM/YYYY"
+              const formattedDate = selectedDate
+                .toLocaleDateString('en-GB')
+                .replace(/-/g, '/');
+              handleChange('dateOfBirth', formattedDate);
+            }
+          }}
+        />
+      )}
 
+      {/* Gender selector */}
+      <TouchableOpacity
+        style={styles.input}
+        onPress={() => setShowGenderOptions(!showGenderOptions)}
+      >
+        <Text style={{ color: form.gender ? '#111827' : '#9ca3af' }}>
+          {form.gender ? t(`signup.${form.gender.toLowerCase()}`) : t('signup.gender')}
+        </Text>
+      </TouchableOpacity>
+
+      {showGenderOptions && (
+        <View style={styles.genderOptions}>
+          {['Male', 'Female'].map(option => (
+            <TouchableOpacity
+              key={option}
+              style={[
+                styles.genderOption,
+                form.gender === option && styles.genderOptionSelected,
+              ]}
+              onPress={() => {
+                handleChange('gender', option);
+                setShowGenderOptions(false);
+              }}
+            >
+              <Text
+                style={[
+                  styles.genderText,
+                  form.gender === option && styles.genderTextSelected,
+                ]}
+              >
+                {t(`signup.${option.toLowerCase()}`)}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
+
+      {/* Account type */}
       <Text style={styles.label}>{t('signup.accountType')}</Text>
       <View style={styles.typeContainer}>
         <TouchableOpacity
@@ -139,6 +207,7 @@ const SignupScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
+      {/* Signup button */}
       <TouchableOpacity
         style={styles.buttonPrimary}
         onPress={handleSignup}
@@ -210,6 +279,27 @@ const styles = StyleSheet.create({
   },
   typeButtonTextSelected: {
     color: '#ffffff',
+  },
+  genderOptions: {
+    backgroundColor: '#f9fafb',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    marginBottom: 15,
+  },
+  genderOption: {
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  genderOptionSelected: {
+    backgroundColor: '#6366f1',
+  },
+  genderText: {
+    color: '#111827',
+  },
+  genderTextSelected: {
+    color: '#ffffff',
+    fontWeight: '600',
   },
   buttonPrimary: {
     backgroundColor: '#6366f1',

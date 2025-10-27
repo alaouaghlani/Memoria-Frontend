@@ -58,7 +58,9 @@
     "creating": "Creating...",
     "haveAccount": "Already have an account? Sign in",
     "fillAllFields": "Please fill in all fields.",
-    "creationFailed": "Account creation failed."
+    "creationFailed": "Account creation failed.",
+    "male": "Male",
+  "female": "Female"
   },
   "error": {
      "incorrectCode": "Incorrect verification code.",
